@@ -1,4 +1,4 @@
-package com.example.cronos;
+package com.cronos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

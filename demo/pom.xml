@@ -98,7 +98,7 @@
             <version>${twilio.version}</version>
         </dependency>
 
-        <!-- ===== CLOUDINARY (imágenes) ===== -->
+        <!-- ===== CLOUDINARY (imágenes-videos) ===== -->
         <dependency>
             <groupId>com.cloudinary</groupId>
             <artifactId>cloudinary-http44</artifactId>
