@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -41,6 +43,8 @@ public class AuthService {
         if (!usuario.isActivo()) {
             throw new IllegalArgumentException("La cuenta está desactivada");
         }
+        usuario.setUltimoAcceso(LocalDateTime.now());
+        usuarioRepository.save(usuario);
         return toDTO(usuario);
     }
 
@@ -52,6 +56,7 @@ public class AuthService {
                 .rol(usuario.getRol())
                 .activo(usuario.isActivo())
                 .fechaCreacion(usuario.getFechaCreacion())
+                .ultimoAcceso(usuario.getUltimoAcceso())
                 .build();
     }
 }
