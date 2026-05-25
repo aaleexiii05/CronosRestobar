@@ -24,13 +24,12 @@ public class InsumoService {
                 .collect(Collectors.toList());
     }
 
-    public List<InsumoDTO> listarBajoStock() {
-        return insumoRepository.findAll()
-                .stream()
-                .filter(i -> i.getStockActual().compareTo(i.getStockMinimo()) <= 0)
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+   public List<InsumoDTO> listarBajoStock() {
+    return insumoRepository.findBajoStock()
+            .stream()
+            .map(this::toDTO)
+            .collect(Collectors.toList());
+}
 
     public InsumoDTO buscarPorId(Long id) {
         Insumo insumo = insumoRepository.findById(id)
