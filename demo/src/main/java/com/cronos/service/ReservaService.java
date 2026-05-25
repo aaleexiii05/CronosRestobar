@@ -89,8 +89,11 @@ public class ReservaService {
                 .usuarioRegistro(usuarioRegistro)
                 .build();
 
-        mesa.setEstado(Mesa.EstadoMesa.RESERVADA);
-        mesaRepository.save(mesa);
+        // Solo marcar como RESERVADA si la reserva es para hoy
+        if (dto.getFecha().equals(LocalDate.now())) {
+            mesa.setEstado(Mesa.EstadoMesa.RESERVADA);
+            mesaRepository.save(mesa);
+        }
 
         return toDTO(reservaRepository.save(reserva));
     }
@@ -102,6 +105,10 @@ public class ReservaService {
         reserva.setEstado(estado);
         if (estado == Reserva.EstadoReserva.CANCELADA) {
             reserva.getMesa().setEstado(Mesa.EstadoMesa.LIBRE);
+            mesaRepository.save(reserva.getMesa());
+        }
+        if (estado == Reserva.EstadoReserva.CONFIRMADA) {
+            reserva.getMesa().setEstado(Mesa.EstadoMesa.RESERVADA);
             mesaRepository.save(reserva.getMesa());
         }
         return toDTO(reservaRepository.save(reserva));
