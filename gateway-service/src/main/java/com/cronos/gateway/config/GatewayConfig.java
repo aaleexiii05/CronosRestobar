@@ -33,7 +33,7 @@ public class GatewayConfig {
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
                         .uri("http://localhost:8084"))
                 .route("inventory-service", r -> r
-                        .path("/api/insumos/**", "/api/movimientos/**")
+                        .path("/api/insumos/**", "/api/movimientos-stock/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
                         .uri("http://localhost:8085"))
                 .route("reservation-service", r -> r
