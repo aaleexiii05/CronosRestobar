@@ -1,0 +1,390 @@
+<div style="background: linear-gradient(rgba(10, 16, 28, 0.72), rgba(6, 9, 17, 0.85)), url('/checkout_bg.png') center/cover no-repeat fixed; color: var(--txt); min-height: 100vh; font-family: 'Outfit', sans-serif;">
+  
+  <!-- HEADER STICKY -->
+  <header style="position: sticky; top: 0; z-index: 100; background: rgba(13, 13, 13, 0.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--linea); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem;">
+    <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" routerLink="/">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 1.8rem;">hourglass_empty</span>
+      <span style="letter-spacing: 0.18em; font-weight: 900; color: white; font-size: 1.25rem;">CRONOS</span>
+      <div style="width: 1px; height: 18px; background-color: var(--rojo);"></div>
+      <span style="color: var(--txt-sub); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;">RESTOBAR</span>
+    </div>
+
+    <nav style="display: flex; gap: 2rem;">
+      <a class="nav-link" routerLink="/">Inicio</a>
+      <a class="nav-link" routerLink="/menu">Menú</a>
+      <a *ngIf="isLoggedIn && usuarioActual?.rol === 'CLIENTE'" class="nav-link" routerLink="/cliente" style="color: var(--dorado);">Mis Reservas</a>
+      <a *ngIf="usuarioActual && usuarioActual.rol === 'ADMIN'" class="nav-link" routerLink="/admin" style="color: var(--dorado);">Admin Panel</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <div *ngIf="isLoggedIn" style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 0.8rem; color: var(--txt-sub);">Hola, {{ usuarioActual?.nombres || usuarioActual?.nombre }}</span>
+        <button (click)="logout()" style="background: transparent; border: 1px solid var(--linea); color: var(--txt-sub); padding: 6px 12px; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 0.95rem;">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+      <button *ngIf="!isLoggedIn" routerLink="/login" style="background: transparent; border: 1px solid var(--rojo); color: var(--rojo); padding: 8px 16px; font-size: 0.78rem; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">
+        Iniciar Sesión
+      </button>
+    </div>
+  </header>
+
+  <!-- SECCIÓN PRINCIPAL CHECKOUT -->
+  <main style="max-width: 1100px; margin: 0 auto; padding: 3rem 20px 4rem;">
+    
+    <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--linea); padding-bottom: 12px;">
+      <h1 style="font-weight: 900; font-size: 2.2rem; color: white; margin: 0;">PROCESAR PEDIDO Y RESERVA</h1>
+      <p style="color: var(--txt-sub); font-size: 0.85rem; margin: 4px 0 0 0;">Complete los detalles de su consumo y reserve su mesa en tiempo real.</p>
+    </div>
+
+    <div *ngIf="cart.length === 0" style="text-align: center; padding: 80px 20px; background-color: var(--carbon); border: 1px solid var(--linea);">
+      <span class="material-symbols-outlined" style="font-size: 3.5rem; display: block; margin-bottom: 16px; color: var(--txt-dim);">shopping_cart</span>
+      <h2 style="font-weight: 900; color: white; margin-bottom: 10px;">Su carrito de pedido está vacío</h2>
+      <p style="color: var(--txt-sub); font-size: 0.88rem; max-width: 400px; margin: 0 auto 24px;">Debe agregar productos de nuestra carta digital para poder confirmar una reserva.</p>
+      <button class="btn-premium-rojo" routerLink="/menu">Ir al Menú del Restobar</button>
+    </div>
+
+    <div *ngIf="cart.length > 0" class="checkout-grid">
+      
+      <!-- LADO IZQUIERDO: DETALLE DE PRODUCTOS (TARJETAS GRANDES) -->
+      <div style="flex: 1.3; display: flex; flex-direction: column; gap: 16px;">
+        <h3 style="font-weight: bold; color: white; margin: 0 0 8px 0; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--rojo);">shopping_bag</span>
+          <span>1. PRODUCTOS EN TU PEDIDO</span>
+        </h3>
+        
+        <div *ngFor="let item of cart; let i = index" class="checkout-product-card">
+          <!-- Mostrar imagen gourmet para platos de comida, si no el degradado con el emoji/icono -->
+          <div class="product-visual" [style.background]="getGradient(item.producto.categoriaNombre)">
+            <img *ngIf="item.producto.nombre.toLowerCase().includes('ceviche') || item.producto.nombre.toLowerCase().includes('lomo') || item.producto.nombre.toLowerCase().includes('ají') || item.producto.categoriaNombre === 'Platos de Fondo'" src="gourmet_dish.png" alt="Plato Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+            <span *ngIf="!(item.producto.nombre.toLowerCase().includes('ceviche') || item.producto.nombre.toLowerCase().includes('lomo') || item.producto.nombre.toLowerCase().includes('ají') || item.producto.categoriaNombre === 'Platos de Fondo')" class="material-symbols-outlined" style="font-size: 2.6rem; color: rgba(255,255,255,0.75);">
+              {{ item.producto.categoriaNombre === 'Bebidas' ? 'local_drink' : (item.producto.categoriaNombre === 'Licores' ? 'local_bar' : 'restaurant') }}
+            </span>
+          </div>
+          
+          <div class="product-details">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <span style="font-size: 0.6rem; color: var(--rojo); letter-spacing: 0.1em; text-transform: uppercase; font-weight: bold;">{{ item.producto.categoriaNombre }}</span>
+                <h4 style="font-weight: 800; font-size: 1.1rem; color: white; margin: 2px 0 6px 0;">{{ item.producto.nombre }}</h4>
+                <p style="color: var(--txt-sub); font-size: 0.78rem; line-height: 1.35; margin: 0; max-width: 320px;">{{ item.producto.descripcion }}</p>
+              </div>
+              
+              <div style="text-align: right;">
+                <div style="font-size: 0.72rem; color: var(--rojo);">S/ {{ item.producto.precio | number:'1.2-2' }} c/u</div>
+                <div style="font-weight: 900; font-size: 1.25rem; color: white; margin-top: 4px;">S/ {{ item.producto.precio * item.cantidad | number:'1.2-2' }}</div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid var(--linea); padding-top: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.78rem; color: var(--txt-sub); font-weight: bold;">Cantidad:</span>
+                <button (click)="modifyQty(i, -1)" style="width: 26px; height: 26px; background-color: var(--gris); color: white; border: 1px solid var(--linea); font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 0.9rem;">remove</span>
+                </button>
+                <span style="font-weight: 900; font-size: 0.95rem; width: 20px; text-align: center; color: white;">{{ item.cantidad }}</span>
+                <button (click)="modifyQty(i, 1)" style="width: 26px; height: 26px; background-color: var(--gris); color: white; border: 1px solid var(--linea); font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 0.9rem;">add</span>
+                </button>
+              </div>
+              
+              <button (click)="removeFromCart(i)" style="background: transparent; border: none; color: var(--rojo); cursor: pointer; font-size: 0.75rem; letter-spacing: 0.05em; font-weight: bold; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
+                <span class="material-symbols-outlined" style="font-size: 0.95rem;">delete</span>
+                <span>Eliminar plato</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen subtotal izquierdo -->
+        <div style="background-color: var(--carbon); border: 1px solid var(--linea); padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: bold; color: var(--txt-sub); font-size: 0.88rem;">Total estimado consumos:</span>
+          <span style="font-weight: 900; font-size: 1.4rem; color: white;">S/ {{ totalCart | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <!-- LADO DERECHO: FORMULARIO DE RESERVA Y CHECKOUT -->
+      <div style="flex: 1; background-color: var(--carbon); border: 1px solid var(--linea); padding: 25px; height: fit-content; border-top: 5px solid var(--rojo);">
+        <h3 style="font-weight: bold; color: white; margin: 0 0 16px 0; border-bottom: 1px solid var(--linea); padding-bottom: 10px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--rojo);">event_seat</span>
+          <span>2. DETALLES DE RESERVA</span>
+        </h3>
+        
+        <div *ngIf="personasBusqueda >= 3" style="background-color: rgba(192, 57, 43, 0.1); border-left: 2px solid var(--rojo); padding: 10px; font-size: 0.8rem; color: var(--rojo); margin-bottom: 16px; line-height: 1.35; display: flex; align-items: flex-start; gap: 6px;">
+          <span class="material-symbols-outlined" style="font-size: 1.1rem; flex-shrink: 0;">info</span>
+          <span><strong>Aviso:</strong> Reservas de 3+ comensales requieren platos agregados y pago online (Mercado Pago).</span>
+        </div>
+
+        <form (ngSubmit)="buscarMesasDisponibles()">
+          <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <div style="flex: 1;">
+              <label>Fecha de Asistencia</label>
+              <!-- Recuadro pequeño modificable para la fecha -->
+              <input type="date" name="fechaBusqueda" [(ngModel)]="fechaBusqueda" required style="font-size: 0.82rem; padding: 8px 10px; text-align: center;">
+            </div>
+            <div style="flex: 1;">
+              <label>Turno</label>
+              <select name="turnoBusqueda" [(ngModel)]="turnoBusqueda" required style="font-size: 0.82rem; padding: 8px 10px;">
+                <option value="ALMUERZO">Almuerzo</option>
+                <option value="MEDIA_TARDE">Media Tarde</option>
+                <option value="CENA">Cena</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label>Número de Comensales</label>
+            <input type="number" name="personasBusqueda" [(ngModel)]="personasBusqueda" required min="1" style="font-size: 0.82rem; padding: 8px 10px;">
+          </div>
+
+          <button class="btn-premium-rojo" type="submit" style="width: 100%; height: 40px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; justify-content: center;">
+            <span class="material-symbols-outlined" style="font-size: 1.1rem;">search</span>
+            <span>Buscar Mesas Disponibles</span>
+          </button>
+        </form>
+
+        <!-- Mesas Disponibles y Checkout de Facturación -->
+        <div *ngIf="buscarRealizado && mesasDisponibles.length > 0" style="margin-top: 20px; border-top: 1px dashed var(--linea); padding-top: 20px;">
+          
+          <div style="margin-bottom: 15px;">
+            <label>Seleccionar Mesa Libre</label>
+            <select [(ngModel)]="mesaSeleccionada" name="mesaSelect" style="margin-bottom: 10px;">
+              <option [ngValue]="null" disabled selected>Elija una mesa disponible</option>
+              <option *ngFor="let m of mesasDisponibles" [ngValue]="m">
+                Mesa N° {{ m.numero }} (Capacidad: {{ m.capacidad }} pers. - {{ m.tipo }} - {{ m.ubicacion }})
+              </option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem;">
+              <input type="checkbox" [(ngModel)]="comidaServidaCaliente" style="width: auto;">
+              <span>Deseo mi comida servida caliente apenas llegue.</span>
+            </label>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label>Método de Pago</label>
+            <select name="metodoPago" [(ngModel)]="metodoPago" style="margin-bottom: 8px;">
+              <option value="EFECTIVO" [disabled]="personasBusqueda >= 3">Efectivo (Presencial)</option>
+              <option value="MERCADO_PAGO">Mercado Pago (Online)</option>
+            </select>
+          </div>
+
+          <div *ngIf="metodoPago === 'MERCADO_PAGO'" style="margin-bottom: 15px;">
+            <label>ID Transacción Mercado Pago</label>
+            <input type="text" [(ngModel)]="transaccionId" placeholder="Ingresar código de transacción Mercado Pago">
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label>Tipo de Comprobante</label>
+            <select name="tipoComprobante" [(ngModel)]="tipoComprobante" style="margin-bottom: 8px;">
+              <option value="BOLETA">Boleta de Venta</option>
+              <option value="FACTURA">Factura Comercial</option>
+            </select>
+          </div>
+
+          <!-- Consulta RUC -->
+          <div style="margin-bottom: 15px;" *ngIf="tipoComprobante === 'FACTURA'">
+            <label>RUC (11 dígitos)</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+              <input type="text" [(ngModel)]="clienteRuc" maxlength="11" placeholder="Ej: 20608754129" style="flex: 2;">
+              <button type="button" class="btn-premium-secundario" (click)="buscarRuc()" style="flex: 1; padding: 0; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                <span class="material-symbols-outlined" style="font-size: 0.95rem;">search</span>
+                <span>Buscar RUC</span>
+              </button>
+            </div>
+            <div *ngIf="razonSocial" style="font-size: 0.8rem; color: var(--dorado); font-weight: bold; background-color: var(--gris); padding: 8px; border-left: 2px solid var(--dorado);">
+              Razón Social: {{ razonSocial }}
+            </div>
+          </div>
+
+          <!-- Alertas y Feedback -->
+          <div *ngIf="resError" style="color: var(--rojo); font-size: 0.82rem; margin-bottom: 12px; font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span class="material-symbols-outlined" style="font-size: 1.1rem;">warning</span>
+            <span>{{ resError }}</span>
+          </div>
+          <div *ngIf="resSuccess" style="color: var(--verde-ok); font-size: 0.82rem; margin-bottom: 12px; font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span class="material-symbols-outlined" style="font-size: 1.1rem;">check_circle</span>
+            <span>{{ resSuccess }}</span>
+          </div>
+
+          <!-- BOTÓN DE CONFIRMACIÓN -->
+          <div style="margin-top: 20px; border-top: 1px solid var(--linea); padding-top: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px;">
+              <span style="font-size: 0.85rem; color: var(--txt-sub); font-weight: bold;">Mesa + Comidas:</span>
+              <div class="price-holder">
+                <span class="price-symbol">S/ </span>
+                <span class="price-val" style="font-size: 1.6rem; color: var(--dorado);">{{ totalCart | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <!-- Botón según sesión -->
+            <button *ngIf="!isLoggedIn" type="button" (click)="redirigirAlLogin()" class="btn-premium-rojo" style="width: 100%; height: 48px; background-color: var(--rojo); border: 1px solid var(--rojo); display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <span class="material-symbols-outlined" style="font-size: 1.2rem;">login</span>
+              <span>Iniciar Sesión para Confirmar</span>
+            </button>
+
+            <button *ngIf="isLoggedIn" type="button" (click)="confirmarReserva()" class="btn-premium-rojo" style="width: 100%; height: 48px; background-color: var(--rojo); border: 1px solid var(--rojo); display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <span class="material-symbols-outlined" style="font-size: 1.2rem;">check_circle</span>
+              <span>Confirmar Reserva y Pago</span>
+            </button>
+          </div>
+
+        </div>
+
+        <div *ngIf="buscarRealizado && mesasDisponibles.length === 0" style="color: var(--rojo); text-align: center; margin-top: 20px; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span class="material-symbols-outlined" style="font-size: 1.15rem;">info</span>
+          <span>No hay mesas libres para los criterios seleccionados. Intente otra fecha o turno.</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- COMPROBANTE TÉRMICO ELECTRONICO (MOCKUP PDF INTERACTIVO) -->
+  <div class="modal-overlay" *ngIf="mostrarPdfSimulado">
+    <mat-card style="width: 100%; max-width: 440px; padding: 25px; background: #ffffff; border-radius: 0; border: 1px solid #cccccc; color: #111111; font-family: 'Courier New', Courier, monospace; overflow-y: auto; max-height: 90vh; border-top: 10px solid var(--rojo);">
+      
+      <div id="imprimible-ticket" style="background: white; padding: 10px;">
+        <div style="text-align: center; border-bottom: 1px dashed #333333; padding-bottom: 12px; margin-bottom: 12px;">
+          <h2 style="font-weight: 900; margin: 0 0 4px 0; font-size: 1.35rem; color: #111;">CRONOS RESTOBAR</h2>
+          <p style="font-size: 0.85em; margin: 2px 0; font-weight: bold;">RUC: 20608754129</p>
+          <p style="font-size: 0.8em; margin: 2px 0;">Av. Restauración 123 - Miraflores, Lima</p>
+          <p style="font-size: 0.8em; margin: 2px 0;">Telf: (01) 445-8902</p>
+          
+          <div style="font-size: 0.85em; font-weight: bold; margin: 10px 0; border: 1px solid #111; padding: 6px; display: inline-block; text-transform: uppercase;">
+            {{ tipoComprobante === 'FACTURA' ? 'FACTURA ELECTRÓNICA' : 'BOLETA DE VENTA ELECTRÓNICA' }} <br>
+            {{ ticketEmitido?.numeroComprobante || 'PROV-002910' }}
+          </div>
+        </div>
+
+        <!-- Detalles del Cliente y Reserva -->
+        <div style="font-size: 0.8rem; line-height: 1.4; margin-bottom: 12px; border-bottom: 1px dashed #333333; padding-bottom: 12px; color: #111;">
+          <div><strong>FECHA EMISIÓN:</strong> {{ ticketEmitido?.fechaEmision | date:'dd/MM/yyyy HH:mm:ss' }}</div>
+          <div><strong>CLIENTE:</strong> {{ ticketEmitido?.clienteNombre | uppercase }}</div>
+          
+          <div *ngIf="tipoComprobante === 'FACTURA'">
+            <div><strong>RUC:</strong> {{ ticketEmitido?.clienteRuc }}</div>
+            <div><strong>DIRECCIÓN:</strong> {{ ticketEmitido?.razonSocial }}</div>
+          </div>
+          <div *ngIf="tipoComprobante === 'BOLETA'">
+            <div><strong>DNI/DOC:</strong> {{ ticketEmitido?.clienteDocumento || usuarioActual?.dni }}</div>
+          </div>
+          
+          <div style="margin-top: 6px; border-top: 1px dotted #ccc; padding-top: 6px;">
+            <div><strong>MESA SELECCIONADA:</strong> Mesa N° {{ mesaSeleccionada?.numero }}</div>
+            <div><strong>TURNO / FECHA:</strong> {{ turnoBusqueda }} | {{ fechaBusqueda }}</div>
+            <div><strong>COMIDA SERVIDA CALIENTE:</strong> {{ comidaServidaCaliente ? 'SÍ' : 'NO' }}</div>
+            <div><strong>MÉTODO DE PAGO:</strong> {{ ticketEmitido?.metodoPago }}</div>
+            <div *ngIf="ticketEmitido?.transaccionId" style="word-break: break-all;"><strong>ID TRANSACCIÓN:</strong> {{ ticketEmitido?.transaccionId }}</div>
+          </div>
+        </div>
+
+        <!-- Tabla de Consumos -->
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 12px; color: #111;">
+          <thead>
+            <tr style="border-bottom: 1px dashed #333333;">
+              <th style="padding: 4px 0; text-align: left;">DESCRIPCIÓN</th>
+              <th style="padding: 4px 0; text-align: center; width: 45px;">CANT.</th>
+              <th style="padding: 4px 0; text-align: right; width: 80px;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let det of ticketEmitido?.detalles">
+              <td style="padding: 6px 0; text-align: left; vertical-align: top;">{{ det.descripcion }}</td>
+              <td style="padding: 6px 0; text-align: center; vertical-align: top;">{{ det.cantidad }}</td>
+              <td style="padding: 6px 0; text-align: right; vertical-align: top;">S/ {{ det.subtotal | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Desglose Totales -->
+        <div style="text-align: right; font-size: 0.85rem; border-top: 1px dashed #333333; padding-top: 8px; margin-bottom: 15px; color: #111;">
+          <div>SUBTOTAL: S/ {{ ticketEmitido?.subtotal | number:'1.2-2' }}</div>
+          <div>IGV (18%): S/ {{ ticketEmitido?.igv | number:'1.2-2' }}</div>
+          <div style="font-weight: bold; font-size: 1.1em; margin-top: 4px;">
+            TOTAL PAGADO: S/ {{ ticketEmitido?.total | number:'1.2-2' }}
+          </div>
+        </div>
+
+        <!-- Simulación de Códigos SUNAT -->
+        <div style="text-align: center; border-top: 1px dashed #333333; padding-top: 10px; margin-bottom: 10px;">
+          <!-- Código de barras SVG -->
+          <svg width="220" height="25" style="margin: 5px auto; display: block;">
+            <rect width="220" height="25" fill="white" />
+            <rect x="10" y="2" width="2" height="20" fill="black" />
+            <rect x="14" y="2" width="4" height="20" fill="black" />
+            <rect x="20" y="2" width="1" height="20" fill="black" />
+            <rect x="23" y="2" width="3" height="20" fill="black" />
+            <rect x="28" y="2" width="2" height="20" fill="black" />
+            <rect x="34" y="2" width="4" height="20" fill="black" />
+            <rect x="40" y="2" width="1" height="20" fill="black" />
+            <rect x="44" y="2" width="2" height="20" fill="black" />
+            <rect x="48" y="2" width="4" height="20" fill="black" />
+            <rect x="58" y="2" width="3" height="20" fill="black" />
+            <rect x="68" y="2" width="4" height="20" fill="black" />
+            <rect x="78" y="2" width="2" height="20" fill="black" />
+            <rect x="88" y="2" width="4" height="20" fill="black" />
+            <rect x="100" y="2" width="2" height="20" fill="black" />
+            <rect x="110" y="2" width="1" height="20" fill="black" />
+            <rect x="120" y="2" width="3" height="20" fill="black" />
+            <rect x="130" y="2" width="4" height="20" fill="black" />
+            <rect x="140" y="2" width="2" height="20" fill="black" />
+            <rect x="150" y="2" width="1" height="20" fill="black" />
+            <rect x="160" y="2" width="3" height="20" fill="black" />
+            <rect x="170" y="2" width="4" height="20" fill="black" />
+            <rect x="180" y="2" width="2" height="20" fill="black" />
+            <rect x="190" y="2" width="3" height="20" fill="black" />
+            <rect x="200" y="2" width="4" height="20" fill="black" />
+          </svg>
+          <div style="font-size: 0.75rem; color: #555;">Código de Autorización SUNAT</div>
+
+          <!-- Código QR SVG -->
+          <svg width="100" height="100" style="margin: 10px auto; display: block;">
+            <rect width="100" height="100" fill="white" />
+            <rect x="10" y="10" width="30" height="30" fill="black" />
+            <rect x="15" y="15" width="20" height="20" fill="white" />
+            <rect x="18" y="18" width="14" height="14" fill="black" />
+            <rect x="60" y="10" width="30" height="30" fill="black" />
+            <rect x="65" y="15" width="20" height="20" fill="white" />
+            <rect x="68" y="18" width="14" height="14" fill="black" />
+            <rect x="10" y="60" width="30" height="30" fill="black" />
+            <rect x="15" y="65" width="20" height="20" fill="white" />
+            <rect x="18" y="68" width="14" height="14" fill="black" />
+            <rect x="45" y="15" width="8" height="8" fill="black" />
+            <rect x="45" y="30" width="8" height="15" fill="black" />
+            <rect x="30" y="45" width="15" height="8" fill="black" />
+            <rect x="15" y="45" width="8" height="8" fill="black" />
+            <rect x="60" y="45" width="15" height="15" fill="black" />
+            <rect x="45" y="60" width="15" height="8" fill="black" />
+            <rect x="60" y="65" width="8" height="15" fill="black" />
+            <rect x="75" y="60" width="15" height="15" fill="black" />
+            <rect x="45" y="80" width="25" height="8" fill="black" />
+            <rect x="80" y="80" width="10" height="10" fill="black" />
+          </svg>
+          
+          <div style="font-size: 0.75em; font-style: italic; color: #444; margin-top: 5px;">
+            Representación impresa de comprobante electrónico. <br>
+            ¡Gracias por su visita a Cronos Restobar!
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+        <button class="btn-premium-secundario" style="flex: 1; height: 40px; color: #111; border-color: #ccc; display: flex; align-items: center; justify-content: center; gap: 6px;" (click)="printTicket()">
+          <span class="material-symbols-outlined" style="font-size: 1.15rem;">print</span>
+          <span>Imprimir</span>
+        </button>
+        <button class="btn-premium-rojo" style="flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px;" (click)="closePdfModal()">
+          <span class="material-symbols-outlined" style="font-size: 1.15rem;">calendar_month</span>
+          <span>Ver Mis Reservas</span>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+
+</div>

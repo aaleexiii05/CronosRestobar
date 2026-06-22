@@ -1,0 +1,423 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* Paleta de Colores y Tipografía Premium de Cronos Restobar */
+:root {
+  --rojo: #e11d48; /* Rojo frambuesa vibrante y moderno */
+  --rojo-dark: #be123c;
+  --dorado: #d4af37; /* Oro clásico brillante */
+  --dorado-dark: #b59223;
+  --negro: #060913;
+  --carbon: #0d1321; /* Azul noche profundo */
+  --gris: #172033;   /* Azul cobalto oscuro para elementos secundarios */
+  --linea: #25334d;  /* Bordes elegantes y discretos integrados con el azul */
+  --txt: #f8fafc;
+  --txt-sub: #94a3b8;
+  --txt-dim: #64748b;
+  --verde-ok: #10b981;
+  --acento-glow: #00f2fe; /* Detalle cian para micro-destellos creativos */
+
+  /* Variables para secciones claras (degradado blanco-plomo) */
+  --bg-claro: #ffffff;
+  --txt-oscuro: #0f172a;
+  --txt-oscuro-sub: #475569;
+  --linea-clara: #e2e8f0;
+  --bg-tarjeta-clara: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+  border-radius: 0 !important; /* Estética angular, sin redondeo en nada */
+  box-shadow: none !important; /* El contraste se da por bordes y gradientes, sin sombras */
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #060913;
+  color: var(--txt);
+  margin: 0;
+  padding: 0;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+/* Secciones claras (degradado blanco a plomo/gris suave) para transición sin cortes de fondo */
+.section-light {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
+  color: var(--txt-oscuro) !important;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 5rem 10% 5rem !important;
+}
+
+.section-light h2 {
+  color: var(--txt-oscuro) !important;
+}
+.section-light p {
+  color: var(--txt-oscuro-sub) !important;
+}
+.section-light .card-plato {
+  background-color: var(--bg-tarjeta-clara) !important;
+  border: 1px solid var(--linea-clara) !important;
+}
+.section-light .card-plato:hover {
+  border-color: var(--rojo) !important;
+}
+.section-light .card-title-text {
+  color: var(--txt-oscuro) !important;
+}
+.section-light .card-desc-text {
+  color: var(--txt-oscuro-sub) !important;
+}
+.section-light .price-val {
+  color: var(--txt-oscuro) !important;
+}
+.section-light .card-badge {
+  background-color: var(--rojo);
+  color: white;
+}
+
+/* Secciones con efecto parallax para categorías oscuras */
+.section-parallax {
+  background: linear-gradient(rgba(6, 9, 19, 0.82), rgba(6, 9, 19, 0.88)), url('/hero_restobar.png') fixed center / cover no-repeat !important;
+  color: white !important;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 5rem 10% 5rem !important;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+}
+
+.section-parallax h2 {
+  color: white !important;
+}
+.section-parallax p {
+  color: var(--txt-sub) !important;
+}
+.section-parallax .card-plato {
+  background-color: rgba(18, 24, 36, 0.82) !important;
+  border: 1px solid var(--linea) !important;
+  backdrop-filter: blur(4px);
+}
+.section-parallax .card-plato:hover {
+  border-color: var(--rojo) !important;
+}
+.section-parallax .card-title-text {
+  color: white !important;
+}
+.section-parallax .card-desc-text {
+  color: var(--txt-sub) !important;
+}
+.section-parallax .price-val {
+  color: white !important;
+}
+
+/* Refinamientos Tipográficos */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+  text-rendering: optimizeLegibility;
+}
+
+h1 {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+h2 {
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.nav-link {
+  letter-spacing: 0.15em !important;
+  font-weight: 700 !important;
+}
+
+.btn-premium-rojo, .btn-premium-secundario, .btn-premium-dorado {
+  letter-spacing: 0.15em !important;
+  font-weight: 700 !important;
+}
+
+/* Scrollbar personalizado estilo dark premium */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--negro);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--linea);
+  border: 1px solid var(--negro);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rojo);
+}
+
+/* Clases de utilidad */
+.btn-premium-rojo {
+  background-color: var(--rojo);
+  color: #ffffff;
+  border: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-premium-rojo:hover {
+  background-color: var(--rojo-dark);
+}
+
+.btn-premium-secundario {
+  background-color: transparent;
+  color: var(--txt);
+  border: 1px solid var(--linea);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-premium-secundario:hover {
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+.btn-premium-dorado {
+  background-color: var(--dorado);
+  color: var(--negro);
+  border: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-premium-dorado:hover {
+  background-color: var(--dorado-dark);
+}
+
+/* Inputs y Selects */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+  background-color: var(--carbon) !important;
+  color: var(--txt) !important;
+  border: 1px solid var(--linea) !important;
+  padding: 10px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--rojo) !important;
+}
+
+label {
+  color: var(--txt-sub);
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Sidebar del Carrito de Compras (Drawer) - Glassmorphism Translúcido */
+.cart-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cart-drawer.open {
+  transform: translateX(0);
+}
+
+/* Enlaces de Navegación del Header */
+.nav-link {
+  color: #999999;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-link:hover, .nav-link.active {
+  color: white;
+  border-bottom: 2px solid var(--rojo);
+}
+
+/* Rejilla de 3 Columnas Uniforme */
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+/* Tarjeta de Producto (Vertical, Premium) */
+.card-plato {
+  background-color: var(--carbon);
+  border: 1px solid var(--linea);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card-plato:hover {
+  border-color: var(--rojo);
+  transform: translateY(-2px);
+}
+.card-image-holder {
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--rojo);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.card-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+.card-eyebrow {
+  font-size: 0.6rem;
+  color: var(--rojo);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+.card-title-text {
+  font-weight: 800;
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0 0 6px 0;
+}
+.card-desc-text {
+  font-size: 0.78rem;
+  color: var(--txt-sub);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.card-footer-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+.price-holder {
+  display: flex;
+  align-items: baseline;
+}
+.price-symbol {
+  font-size: 0.72rem;
+  font-weight: normal;
+  color: var(--rojo);
+}
+.price-val {
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: white;
+}
+
+/* Adaptación Responsiva de la Rejilla */
+@media (max-width: 900px) {
+  .grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Toast Notifications Container & Cards */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+.toast-card {
+  background-color: var(--carbon);
+  border: 1px solid var(--linea);
+  border-left: 4px solid var(--verde-ok);
+  color: white;
+  padding: 12px 20px;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  pointer-events: auto;
+  animation: toastSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+@keyframes toastSlideIn {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,47 @@
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(rgba(6, 9, 19, 0.82), rgba(6, 9, 19, 0.88)), url('/login_bg.png') center/cover no-repeat; padding: 20px;">
+  
+  <mat-card style="width: 100%; max-width: 400px; padding: 30px; background: rgba(13, 19, 33, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--txt);">
+    
+    <!-- Logo y Cabecera clickeable para retorno a inicio -->
+    <div routerLink="/" style="display: inline-flex; align-items: center; gap: 12px; cursor: pointer; background: rgba(255, 255, 255, 0.04); border-left: 3px solid var(--dorado); padding: 12px 20px; width: 100%; justify-content: center; margin-bottom: 24px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.09)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 1.8rem;">hourglass_empty</span>
+      <span style="letter-spacing: 0.18em; font-weight: 900; color: white; font-size: 1.25rem;">CRONOS</span>
+      <div style="width: 1px; height: 18px; background-color: var(--rojo);"></div>
+      <span style="color: var(--txt-sub); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;">RESTOBAR</span>
+    </div>
+    
+    <h3 style="text-align: center; font-weight: 900; color: white; margin: 0 0 20px 0; font-size: 1.25rem; letter-spacing: 0.05em; text-transform: uppercase;">Bienvenido</h3>
+
+    <mat-card-content style="padding: 0;">
+      <form (ngSubmit)="onLogin()">
+        
+        <div style="margin-bottom: 16px;">
+          <label>Correo Electrónico</label>
+          <input type="email" name="email" [(ngModel)]="email" required placeholder="ejemplo@gmail.com">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label>Contraseña</label>
+          <input type="password" name="password" [(ngModel)]="password" required placeholder="••••••••">
+        </div>
+
+        <div *ngIf="error" style="color: var(--rojo); margin-bottom: 16px; text-align: center; font-size: 0.82rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span class="material-symbols-outlined" style="font-size: 1.1rem;">warning</span>
+          <span>{{ error }}</span>
+        </div>
+
+        <button class="btn-premium-rojo" type="submit" style="width: 100%; height: 45px; font-size: 0.82rem;">
+          Ingresar
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions style="justify-content: center; margin-top: 24px; padding: 0; border-top: 1px solid var(--linea); padding-top: 16px;">
+      <span style="font-size: 0.8rem; color: var(--txt-sub);">
+        ¿Eres un cliente nuevo? 
+        <a routerLink="/register" style="color: var(--rojo); font-weight: bold; text-decoration: none; margin-left: 4px;">Regístrate aquí</a>
+      </span>
+    </mat-card-actions>
+
+  </mat-card>
+</div>

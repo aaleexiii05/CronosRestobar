@@ -63,6 +63,21 @@ public class Reserva {
     @JoinColumn(name = "usuario_id")
     private Usuario usuarioRegistro;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
+
+    @Column(name = "hora_comida")
+    private java.time.LocalTime horaComida;
+
+    @Column(name = "comida_servida_caliente", nullable = false)
+    @Builder.Default
+    private boolean comidaServidaCaliente = false;
+
+    @Column(name = "minutos_adicionales", nullable = false)
+    @Builder.Default
+    private Integer minutosAdicionales = 0;
+
     public enum Turno {
         ALMUERZO,
         MEDIA_TARDE,

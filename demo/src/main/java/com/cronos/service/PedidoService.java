@@ -22,6 +22,7 @@ public class PedidoService {
     private final MesaRepository mesaRepository;
     private final UsuarioRepository usuarioRepository;
     private final ProductoRepository productoRepository;
+    private final NotificationService notificationService;
 
     public List<PedidoDTO> listarTodos() {
         return pedidoRepository.findAll()
@@ -87,7 +88,26 @@ public class PedidoService {
         if (estado == Pedido.EstadoPedido.ENTREGADO) {
             pedido.setFechaHoraEntrega(LocalDateTime.now());
         }
-        return toDTO(pedidoRepository.save(pedido));
+        PedidoDTO dto = toDTO(pedidoRepository.save(pedido));
+        notificationService.enviarNotificacion("ESTADO_PEDIDO", dto);
+        return dto;
+    }
+
+    @Transactional
+    public PedidoDTO marcarListo(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + id));
+        pedido.setEstado(Pedido.EstadoPedido.LISTO);
+        PedidoDTO dto = toDTO(pedidoRepository.save(pedido));
+        notificationService.enviarNotificacion("PEDIDO_LISTO", dto);
+        return dto;
+    }
+
+    public List<PedidoDTO> listarPedidosPendientesDeCobro() {
+        return pedidoRepository.findPedidosPendientesDeCobro(Factura.EstadoPago.APROBADO, Pedido.EstadoPedido.CANCELADO)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -98,6 +118,9 @@ public class PedidoService {
         pedido.getMesa().setEstado(Mesa.EstadoMesa.LIBRE);
         mesaRepository.save(pedido.getMesa());
         pedidoRepository.save(pedido);
+        
+        PedidoDTO dto = toDTO(pedido);
+        notificationService.enviarNotificacion("ESTADO_PEDIDO", dto);
     }
 
     private BigDecimal calcularTotal(List<DetallePedido> detalles) {

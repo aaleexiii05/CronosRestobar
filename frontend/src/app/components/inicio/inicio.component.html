@@ -1,0 +1,343 @@
+<div style="background: transparent; color: var(--txt); min-height: 100vh; position: relative;">
+  
+  <!-- HEADER STICKY -->
+  <header style="position: sticky; top: 0; z-index: 100; background: rgba(13, 13, 13, 0.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--linea); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem;">
+    <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" routerLink="/">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 1.8rem;">hourglass_empty</span>
+      <span style="letter-spacing: 0.18em; font-weight: 900; color: white; font-size: 1.25rem;">CRONOS</span>
+      <div style="width: 1px; height: 18px; background-color: var(--rojo);"></div>
+      <span style="color: var(--txt-sub); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;">RESTOBAR</span>
+    </div>
+
+    <nav style="display: flex; gap: 2rem;">
+      <a class="nav-link active" routerLink="/">Inicio</a>
+      <a class="nav-link" routerLink="/menu">Menú</a>
+      <a *ngIf="isLoggedIn && usuarioActual?.rol === 'CLIENTE'" class="nav-link" routerLink="/cliente" style="color: var(--dorado);">Mis Reservas</a>
+      <a *ngIf="usuarioActual && usuarioActual.rol === 'ADMIN'" class="nav-link" routerLink="/admin" style="color: var(--dorado);">Admin Panel</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <!-- Botón Carrito -->
+      <button (click)="toggleCart()" style="background: transparent; border: 1px solid var(--linea); padding: 8px 16px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; position: relative;">
+        <span class="material-symbols-outlined" style="font-size: 1.15rem; vertical-align: middle;">shopping_cart</span>
+        <span>PEDIDO</span>
+        <span *ngIf="cart.length > 0" style="background-color: var(--rojo); color: white; font-size: 0.72rem; padding: 2px 7px; font-weight: 900; border-radius: 50%;">
+          {{ cartCount }}
+        </span>
+      </button>
+
+      <!-- Botón Iniciar Sesión / Logout -->
+      <button *ngIf="!isLoggedIn" routerLink="/login" style="background: transparent; border: 1px solid var(--rojo); color: var(--rojo); padding: 8px 16px; font-size: 0.78rem; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s;">
+        Iniciar Sesión
+      </button>
+      
+      <div *ngIf="isLoggedIn" style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 0.8rem; color: var(--txt-sub);">Hola, {{ usuarioActual?.nombres || usuarioActual?.nombre }}</span>
+        <button (click)="logout()" style="background: transparent; border: 1px solid var(--linea); color: var(--txt-sub); padding: 6px 12px; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 0.95rem;">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION CON IMAGEN DE FONDO IA Y DESTELLO CONFINADO -->
+  <section style="min-height: calc(100vh - 70px); padding: 5rem 10%; width: 100vw; margin-left: calc(-50vw + 50%); display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--linea); background: linear-gradient(180deg, rgba(6, 9, 19, 0.65) 0%, rgba(6, 9, 19, 0.85) 100%), url('/hero_restobar_bg.png') center/cover no-repeat; text-align: center; position: relative;">
+    <div style="max-width: 750px; margin: 0 auto;">
+      <div style="font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dorado); font-weight: bold; margin-bottom: 16px;">
+        Lima · Perú · Desde 2019
+      </div>
+      <h1 style="font-weight: 900; letter-spacing: -0.01em; font-size: clamp(2.6rem, 5.5vw, 4.5rem); line-height: 1.15; margin: 0 0 24px 0; color: white;">
+        SABORES QUE MARCAN <br>
+        EL <span style="color: var(--rojo);">TIEMPO</span>.
+      </h1>
+      <p style="color: var(--txt-sub); font-size: 1.05rem; line-height: 1.7; margin-bottom: 36px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+        Disfrute de la más alta gastronomía peruana y coctelería de autor. En Cronos Restobar fusionamos la herencia culinaria con técnicas contemporáneas.
+      </p>
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn-premium-rojo" routerLink="/checkout" style="padding: 14px 32px; font-size: 0.82rem;">Reservar Mesa</button>
+        <button class="btn-premium-secundario" routerLink="/menu" style="padding: 14px 32px; font-size: 0.82rem; border-color: rgba(255, 255, 255, 0.3); color: white;">Ver Menú Completo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: PLATOS DESTACADOS -->
+  <section id="destacados" class="section-light">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+      <div style="height: 1px; flex: 1; background-color: var(--linea-clara);"></div>
+      <h2 style="font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; margin: 0;">PLATOS DESTACADOS</h2>
+      <div style="height: 1px; flex: 1; background-color: var(--linea-clara);"></div>
+    </div>
+    <p style="text-align: center; font-size: 0.88rem; margin: 0 0 30px 0;">Las firmas culinarias predilectas de nuestra cocina</p>
+
+    <div class="grid-3col">
+      <div *ngFor="let prod of destacados; let i = index" class="card-plato">
+        <div class="card-image-holder" [style.background]="getGradient(prod.categoriaNombre)">
+          <div class="card-badge" *ngIf="i === 0">Chef's Pick</div>
+          <div class="card-badge" *ngIf="i === 1">Nuevo</div>
+          <!-- Mostrar foto real si es ceviche/lomo, sino icono -->
+          <img *ngIf="prod.nombre.toLowerCase().includes('ceviche') || prod.nombre.toLowerCase().includes('lomo')" src="gourmet_dish.png" alt="Plato Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+          <span *ngIf="!(prod.nombre.toLowerCase().includes('ceviche') || prod.nombre.toLowerCase().includes('lomo'))" class="material-symbols-outlined" style="font-size: 3.5rem; color: rgba(255,255,255,0.75);">restaurant</span>
+        </div>
+
+        <div class="card-info">
+          <div>
+            <div class="card-eyebrow">{{ prod.categoriaNombre }}</div>
+            <h3 class="card-title-text">{{ prod.nombre }}</h3>
+            <p class="card-desc-text">{{ prod.descripcion }}</p>
+          </div>
+          <div class="card-footer-flex">
+            <div class="price-holder">
+              <span class="price-symbol">S/ </span>
+              <span class="price-val">{{ prod.precio | number:'1.2-2' }}</span>
+            </div>
+            <button class="btn-premium-rojo btn-xs" (click)="addToCart(prod)">
+              Añadir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: PIQUEOS & SNACKS -->
+  <section id="snacks" style="margin: 0 auto; padding-top: 4rem; padding-bottom: 4rem; max-width: 1100px; padding-left: 20px; padding-right: 20px;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+      <div style="height: 1px; flex: 1; background-color: var(--linea);"></div>
+      <h2 style="font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; margin: 0; color: white;">PIQUEOS & SNACKS</h2>
+      <div style="height: 1px; flex: 1; background-color: var(--linea);"></div>
+    </div>
+    <p style="text-align: center; color: var(--txt-sub); font-size: 0.88rem; margin: 0 0 30px 0;">Para compartir y disfrutar al centro de la mesa</p>
+
+    <div class="grid-3col">
+      <div *ngFor="let prod of snacks" class="card-plato">
+        <div class="card-image-holder" [style.background]="getGradient('snacks')">
+          <span class="material-symbols-outlined" style="font-size: 3.5rem; color: rgba(255,255,255,0.75);">cookie</span>
+        </div>
+
+        <div class="card-info">
+          <div>
+            <div class="card-eyebrow">Snacks</div>
+            <h3 class="card-title-text">{{ prod.nombre }}</h3>
+            <p class="card-desc-text">{{ prod.descripcion }}</p>
+          </div>
+          <div class="card-footer-flex">
+            <div class="price-holder">
+              <span class="price-symbol">S/ </span>
+              <span class="price-val">{{ prod.precio | number:'1.2-2' }}</span>
+            </div>
+            <button class="btn-premium-rojo btn-xs" (click)="addToCart(prod)">
+              Añadir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: BEBIDAS FRÍAS -->
+  <section id="bebidas" class="section-light" style="margin-bottom: 0;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+        <div style="height: 1px; flex: 1; background-color: var(--linea-clara);"></div>
+        <h2 style="font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; margin: 0;">BEBIDAS FRÍAS</h2>
+        <div style="height: 1px; flex: 1; background-color: var(--linea-clara);"></div>
+      </div>
+      <p style="text-align: center; font-size: 0.88rem; margin: 0 0 45px 0;">Refrescos tradicionales y jugos naturales</p>
+
+      <div class="grid-3col">
+        <div *ngFor="let prod of bebidas" class="card-plato">
+          <div class="card-image-holder" [style.background]="getGradient('bebidas')">
+            <span class="material-symbols-outlined" style="font-size: 3.5rem; color: rgba(255,255,255,0.75);">local_drink</span>
+          </div>
+
+          <div class="card-info">
+            <div>
+              <div class="card-eyebrow">Bebidas</div>
+              <h3 class="card-title-text">{{ prod.nombre }}</h3>
+              <p class="card-desc-text">{{ prod.descripcion }}</p>
+            </div>
+            <div class="card-footer-flex">
+              <div class="price-holder">
+                <span class="price-symbol">S/ </span>
+                <span class="price-val">{{ prod.precio | number:'1.2-2' }}</span>
+              </div>
+              <button class="btn-premium-rojo btn-xs" (click)="addToCart(prod)">
+                Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: LICORES PREMIUM -->
+  <section id="licores" style="margin: 0 auto; padding-top: 4rem; padding-bottom: 4rem; max-width: 1100px; padding-left: 20px; padding-right: 20px;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+      <div style="height: 1px; flex: 1; background-color: rgba(200, 168, 75, 0.4);"></div>
+      <h2 style="font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; margin: 0; color: var(--dorado);">LICORES PREMIUM</h2>
+      <div style="height: 1px; flex: 1; background-color: rgba(200, 168, 75, 0.4);"></div>
+    </div>
+    <p style="text-align: center; color: var(--txt-sub); font-size: 0.88rem; margin: 0 0 35px 0;">Selección exclusiva de coctelería y destilados de autor</p>
+
+    <div class="grid-3col">
+      <div *ngFor="let prod of licores" class="card-plato" style="border-left: 2px solid var(--dorado);">
+        <div class="card-image-holder" [style.background]="getGradient('licores')">
+          <span class="material-symbols-outlined" style="font-size: 3.5rem; color: rgba(255,255,255,0.75);">local_bar</span>
+        </div>
+
+        <div class="card-info">
+          <div>
+            <div class="card-eyebrow" style="color: var(--dorado);">Licores Premium</div>
+            <h3 class="card-title-text">{{ prod.nombre }}</h3>
+            <p class="card-desc-text">{{ prod.descripcion }}</p>
+          </div>
+          <div class="card-footer-flex">
+            <div class="price-holder">
+              <span class="price-symbol" style="color: var(--dorado);">S/ </span>
+              <span class="price-val" style="color: var(--dorado);">{{ prod.precio | number:'1.2-2' }}</span>
+            </div>
+            <button class="btn-premium-dorado" style="font-size: 0.72rem; padding: 6px 12px;" (click)="addToCart(prod)">
+              Añadir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: MANIFIESTO CULINARIO (REEMPLAZO DE RESERVAS CON IMAGEN IA) -->
+  <section style="padding: 7rem 10%; width: 100vw; margin-left: calc(-50vw + 50%); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); background: linear-gradient(rgba(13, 22, 38, 0.65), rgba(6, 9, 19, 0.75)), url('/manifiesto_bg.png') center/cover no-repeat fixed; text-align: center; margin-top: 4rem; margin-bottom: 4rem;">
+    <div style="max-width: 850px; margin: 0 auto;">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 2.8rem; margin-bottom: 20px; display: inline-block;">workspace_premium</span>
+      <h3 style="font-weight: 300; font-size: clamp(1.4rem, 4vw, 2rem); letter-spacing: 0.08em; line-height: 1.5; color: white; margin: 0 0 25px 0; text-transform: uppercase;">
+        "Fusionamos la herencia culinaria peruana con mixología contemporánea en un ambiente de sofisticación absoluta"
+      </h3>
+      <div style="width: 60px; height: 1px; background-color: var(--rojo); margin: 0 auto 25px;"></div>
+      <p style="color: var(--txt-sub); font-size: 0.9rem; letter-spacing: 0.05em; line-height: 1.7; max-width: 650px; margin: 0 auto;">
+        En Cronos Restobar, cada creación es una obra de arte cronometrada para ofrecerle una experiencia sensorial inigualable. Seleccionamos rigurosamente ingredientes de productores locales para honrar la frescura y la tradición en su mesa.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: CONTACTO -->
+  <section id="contacto" style="margin-bottom: 4rem; padding-top: 3rem; max-width: 1100px; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+      <div style="height: 1px; flex: 1; background-color: var(--linea);"></div>
+      <h2 style="font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; margin: 0; color: white;">UBICACIÓN Y CONTACTO</h2>
+      <div style="height: 1px; flex: 1; background-color: var(--linea);"></div>
+    </div>
+    <p style="text-align: center; color: var(--txt-sub); font-size: 0.88rem; margin: 0 0 35px 0;">Estamos listos para recibirle. Encuentre nuestra información.</p>
+
+    <div class="grid-4col">
+      <div class="contacto-bloque">
+        <span class="material-symbols-outlined" style="color: var(--rojo); font-size: 2.2rem; margin-bottom: 8px;">location_on</span>
+        <h4 class="contacto-titulo">DIRECCIÓN</h4>
+        <p class="contacto-desc">Av. Restauración 123 Miraflores, Lima</p>
+      </div>
+      <div class="contacto-bloque">
+        <span class="material-symbols-outlined" style="color: var(--rojo); font-size: 2.2rem; margin-bottom: 8px;">phone</span>
+        <h4 class="contacto-titulo">TELÉFONO</h4>
+        <p class="contacto-desc">(01) 445-8902 / 999-888-777</p>
+      </div>
+      <div class="contacto-bloque">
+        <span class="material-symbols-outlined" style="color: var(--rojo); font-size: 2.2rem; margin-bottom: 8px;">mail</span>
+        <h4 class="contacto-titulo">CORREO</h4>
+        <p class="contacto-desc">reservas&#64;cronos.com</p>
+      </div>
+      <div class="contacto-bloque">
+        <span class="material-symbols-outlined" style="color: var(--rojo); font-size: 2.2rem; margin-bottom: 8px;">schedule</span>
+        <h4 class="contacto-titulo">REDES</h4>
+        <p class="contacto-desc">&#64;cronos.restobar</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: UN POCO DE NOSOTROS -->
+  <section style="padding: 7rem 10%; width: 100vw; margin-left: calc(-50vw + 50%); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); background: linear-gradient(rgba(13, 22, 38, 0.65), rgba(6, 9, 19, 0.75)), url('/nosotros_bg.png') center/cover no-repeat fixed; text-align: center; margin-top: 4rem; margin-bottom: 0;">
+    <div style="max-width: 850px; margin: 0 auto;">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 2.8rem; margin-bottom: 20px; display: inline-block;">hourglass_empty</span>
+      <h3 style="font-weight: 300; font-size: clamp(1.4rem, 4vw, 2rem); letter-spacing: 0.08em; line-height: 1.5; color: white; margin: 0 0 25px 0; text-transform: uppercase;">
+        "El tiempo se detiene cuando los sabores cuentan su propia historia"
+      </h3>
+      <div style="width: 60px; height: 1px; background-color: var(--rojo); margin: 0 auto 25px;"></div>
+      <h4 style="font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-size: 1.1rem; color: white; margin-bottom: 15px;">UN POCO DE NOSOTROS</h4>
+      <p style="color: var(--txt-sub); font-size: 0.95rem; letter-spacing: 0.05em; line-height: 1.7; max-width: 650px; margin: 0 auto;">
+        Cronos Restobar nace de la pasión por crear momentos inolvidables. Conectamos la rica despensa de nuestra tierra peruana con una coctelería contemporánea y atrevida. Más que un restaurante, somos un espacio de encuentro donde el tiempo se celebra y cada detalle está diseñado para cautivar sus sentidos.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background-color: var(--carbon); border-top: 1px solid var(--linea); padding: 30px; text-align: center; font-size: 0.8rem; color: var(--txt-dim);">
+    <p style="margin-bottom: 8px;">⧗ CRONOS RESTOBAR © 2026. Todos los derechos reservados.</p>
+    <p style="color: var(--txt-dim); font-size: 0.72rem;">Desarrollado para validación de negocio y facturación electrónica simulada.</p>
+  </footer>
+
+  <!-- SIDEBAR CARRITO -->
+  <div *ngIf="isCartOpen" (click)="toggleCart()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 150;"></div>
+  <div class="cart-drawer" [class.open]="isCartOpen">
+    
+    <!-- Header -->
+    <div style="padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-weight: 900; margin: 0; font-size: 1.15rem; color: white; letter-spacing: 0.10em;">TU PEDIDO</h3>
+      <button (click)="toggleCart()" style="background: transparent; border: none; color: var(--txt-sub); cursor: pointer; display: flex; align-items: center;">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Lista de Items -->
+    <div style="flex: 1; padding: 20px; overflow-y: auto;">
+      <div *ngIf="cart.length === 0" style="color: var(--txt-dim); text-align: center; padding-top: 100px;">
+        <span class="material-symbols-outlined" style="font-size: 3rem; display: block; margin-bottom: 15px; color: var(--txt-dim);">shopping_cart</span>
+        Tu bolsa de pedido está vacía. Explora la carta y agrega platos.
+      </div>
+
+      <div *ngIf="cart.length > 0">
+        <div *ngFor="let item of cart; let i = index" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+          <div style="flex: 1; padding-right: 10px;">
+            <div style="font-weight: bold; font-size: 0.88rem; color: white;">{{ item.producto.nombre }}</div>
+            <div style="color: var(--txt-sub); font-size: 0.8rem;">S/ {{ item.producto.precio | number:'1.2-2' }}</div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button (click)="modifyQty(i, -1)" style="width: 22px; height: 22px; background-color: var(--linea); color: white; border: none; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+              <span class="material-symbols-outlined" style="font-size: 0.85rem;">remove</span>
+            </button>
+            <span style="font-weight: bold; font-size: 0.85rem; width: 14px; text-align: center; color: white;">{{ item.cantidad }}</span>
+            <button (click)="modifyQty(i, 1)" style="width: 22px; height: 22px; background-color: var(--linea); color: white; border: none; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+              <span class="material-symbols-outlined" style="font-size: 0.85rem;">add</span>
+            </button>
+            <button (click)="removeFromCart(i)" style="background: transparent; border: none; color: var(--rojo); cursor: pointer; padding: 0 4px; display: inline-flex; align-items: center;">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding: 24px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px);">
+      <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 1.15rem; color: white; margin-bottom: 20px;">
+        <span style="letter-spacing: 0.05em;">TOTAL:</span>
+        <span style="color: var(--rojo); text-shadow: 0 0 10px rgba(225, 29, 72, 0.3);">S/ {{ totalCart | number:'1.2-2' }}</span>
+      </div>
+      
+      <button (click)="confirmarPedidoCart()" class="btn-premium-rojo" style="width: 100%; height: 48px; font-weight: 900; font-size: 0.8rem; letter-spacing: 0.15em;" [disabled]="cart.length === 0">
+        CONFIRMAR PEDIDO
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Contenedor de Notificaciones (Toasts) a la derecha -->
+<div class="toast-container">
+  <div *ngFor="let t of toasts" class="toast-card">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="material-symbols-outlined" style="color: var(--verde-ok); font-size: 1.25rem;">check_circle</span>
+      <span>{{ t.mensaje }}</span>
+    </div>
+  </div>
+</div>

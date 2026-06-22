@@ -1,0 +1,188 @@
+<div style="background: transparent; color: var(--txt); min-height: 100vh;">
+  
+  <!-- HEADER STICKY -->
+  <header style="position: sticky; top: 0; z-index: 100; background: rgba(13, 13, 13, 0.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--linea); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem;">
+    <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" routerLink="/">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 1.8rem;">hourglass_empty</span>
+      <span style="letter-spacing: 0.18em; font-weight: 900; color: white; font-size: 1.25rem;">CRONOS</span>
+      <div style="width: 1px; height: 18px; background-color: var(--rojo);"></div>
+      <span style="color: var(--txt-sub); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;">RESTOBAR</span>
+    </div>
+
+    <nav style="display: flex; gap: 2rem;">
+      <a class="nav-link" routerLink="/">Inicio</a>
+      <a class="nav-link active" routerLink="/menu">Menú</a>
+      <a *ngIf="isLoggedIn && usuarioActual?.rol === 'CLIENTE'" class="nav-link" routerLink="/cliente" style="color: var(--dorado);">Mis Reservas</a>
+      <a *ngIf="usuarioActual && usuarioActual.rol === 'ADMIN'" class="nav-link" routerLink="/admin" style="color: var(--dorado);">Admin Panel</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <!-- Botón Carrito -->
+      <button (click)="toggleCart()" style="background: transparent; border: 1px solid var(--linea); padding: 8px 16px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; position: relative;">
+        <span class="material-symbols-outlined" style="font-size: 1.15rem; vertical-align: middle;">shopping_cart</span>
+        <span>PEDIDO</span>
+        <span *ngIf="cart.length > 0" style="background-color: var(--rojo); color: white; font-size: 0.72rem; padding: 2px 7px; font-weight: 900; border-radius: 50%;">
+          {{ cartCount }}
+        </span>
+      </button>
+
+      <!-- Botón Iniciar Sesión / Logout -->
+      <button *ngIf="!isLoggedIn" routerLink="/login" style="background: transparent; border: 1px solid var(--rojo); color: var(--rojo); padding: 8px 16px; font-size: 0.78rem; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s;">
+        Iniciar Sesión
+      </button>
+      
+      <div *ngIf="isLoggedIn" style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 0.8rem; color: var(--txt-sub);">Hola, {{ usuarioActual?.nombres || usuarioActual?.nombre }}</span>
+        <button (click)="logout()" style="background: transparent; border: 1px solid var(--linea); color: var(--txt-sub); padding: 6px 12px; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 0.95rem;">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO REDUCIDO A ANCHO COMPLETO -->
+  <section style="background-color: var(--carbon); border-bottom: 1px solid var(--linea); padding: 4rem 10% 3.5rem; width: 100vw; margin-left: calc(-50vw + 50%); text-align: center;">
+    <div style="font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rojo); font-weight: bold; margin-bottom: 6px;">Carta del Establecimiento</div>
+    <h1 style="font-weight: 900; font-size: 2.4rem; color: white; margin: 0 0 10px 0; letter-spacing: -0.01em;">NUESTRO MENÚ COMPLETO</h1>
+    <p style="color: var(--txt-sub); font-size: 0.85rem; max-width: 500px; margin: 0 auto;">Explore las delicias de nuestra cocina criolla y la fina selección de bebidas de nuestro bar.</p>
+  </section>
+
+  <!-- SECCIÓN FILTROS CATEGORÍA (Contenedor Rectangular Elegante Separado con Color de Marca) -->
+  <section style="max-width: 900px; margin: 2.5rem auto; padding: 12px; background: var(--carbon); border: 1px solid var(--linea); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; align-items: center;">
+    <button class="filter-btn" [class.active]="filtroActivo === 'TODOS'" (click)="setFiltro('TODOS')">Todo</button>
+    <button *ngFor="let cat of categoriasDisponibles" 
+            class="filter-btn" 
+            [class.active]="filtroActivo === cat" 
+            (click)="setFiltro(cat)">
+      {{ cat }}
+    </button>
+  </section>
+
+  <!-- BLOQUES POR CATEGORÍA -->
+  <section style="max-width: 1100px; margin: 0 auto; padding: 0;">
+    
+    <div *ngFor="let cat of categoriasDisponibles" 
+         [hidden]="filtroActivo !== 'TODOS' && filtroActivo !== cat"
+         style="margin: 0; padding: 0;">
+      
+      <!-- Cabecera Parallax de Categoría -->
+      <div class="section-parallax" style="padding: 4rem 10% !important; text-align: center; margin-bottom: 0;">
+        <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 2.2rem; margin-bottom: 10px;">
+          {{ getIconForCategory(cat) }}
+        </span>
+        <h2 style="font-weight: 800; letter-spacing: 0.25em; text-transform: uppercase; font-size: 1.5rem; margin: 0; color: white;">
+          {{ cat }}
+        </h2>
+        <p style="color: var(--txt-sub); font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; margin: 5px 0 0 0;">
+          {{ cat === 'Licores' || cat === 'Cócteles' ? 'Selección Especial Barra' : 'Cocina Artesanal' }}
+        </p>
+      </div>
+
+      <!-- Cuadrícula de Platos sobre Fondo Claro -->
+      <div class="section-light" style="padding: 4rem 10% !important; margin-bottom: 0;">
+        <div class="grid-3col">
+          <div *ngFor="let prod of getProductosPorCategoria(cat)" class="card-plato">
+            <div class="card-image-holder" [style.background]="getGradient(cat)">
+              <!-- Mostrar foto real si es ceviche/lomo, sino icono -->
+              <img *ngIf="prod.nombre.toLowerCase().includes('ceviche') || prod.nombre.toLowerCase().includes('lomo')" src="gourmet_dish.png" alt="Plato Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+              <span *ngIf="!(prod.nombre.toLowerCase().includes('ceviche') || prod.nombre.toLowerCase().includes('lomo'))" class="material-symbols-outlined" style="font-size: 2.8rem; color: rgba(255,255,255,0.75);">
+                {{ getIconForCategory(cat) }}
+              </span>
+            </div>
+
+            <div class="card-info">
+              <div>
+                <h3 class="card-title-text" style="color: var(--txt-oscuro);">{{ prod.nombre }}</h3>
+                <p class="card-desc-text" style="color: var(--txt-oscuro-sub);">{{ prod.descripcion }}</p>
+              </div>
+              <div class="card-footer-flex">
+                <div class="price-holder">
+                  <span class="price-symbol" style="color: var(--rojo)">S/ </span>
+                  <span class="price-val" style="color: var(--txt-oscuro)">{{ prod.precio | number:'1.2-2' }}</span>
+                </div>
+                <button class="btn-premium-rojo" style="font-size: 0.72rem; padding: 6px 12px;" (click)="addToCart(prod)">
+                  Añadir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background-color: var(--carbon); border-top: 1px solid var(--linea); padding: 30px; text-align: center; font-size: 0.8rem; color: var(--txt-dim);">
+    <p style="margin-bottom: 8px;">⧗ CRONOS RESTOBAR © 2026. Todos los derechos reservados.</p>
+    <p style="color: var(--txt-dim); font-size: 0.72rem;">Desarrollado para validación de negocio y facturación electrónica simulada.</p>
+  </footer>
+
+  <!-- SIDEBAR CARRITO (DERECHO, SLIDE) -->
+  <div *ngIf="isCartOpen" (click)="toggleCart()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 150;"></div>
+  <div class="cart-drawer" [class.open]="isCartOpen">
+    
+    <!-- Header Carrito -->
+    <div style="padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-weight: 900; margin: 0; font-size: 1.15rem; color: white; letter-spacing: 0.10em;">TU PEDIDO</h3>
+      <button (click)="toggleCart()" style="background: transparent; border: none; color: var(--txt-sub); cursor: pointer; display: flex; align-items: center;">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Lista de Items -->
+    <div style="flex: 1; padding: 20px; overflow-y: auto;">
+      <div *ngIf="cart.length === 0" style="color: var(--txt-dim); text-align: center; padding-top: 100px;">
+        <span class="material-symbols-outlined" style="font-size: 3rem; display: block; margin-bottom: 15px; color: var(--txt-dim);">shopping_cart</span>
+        Tu bolsa de pedido está vacía. Explora la carta y agrega platos.
+      </div>
+
+      <div *ngIf="cart.length > 0">
+        <div *ngFor="let item of cart; let i = index" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+          <div style="flex: 1; padding-right: 10px;">
+            <div style="font-weight: bold; font-size: 0.88rem; color: white;">{{ item.producto.nombre }}</div>
+            <div style="color: var(--txt-sub); font-size: 0.8rem;">S/ {{ item.producto.precio | number:'1.2-2' }}</div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button (click)="modifyQty(i, -1)" style="width: 22px; height: 22px; background-color: var(--linea); color: white; border: none; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+              <span class="material-symbols-outlined" style="font-size: 0.85rem;">remove</span>
+            </button>
+            <span style="font-weight: bold; font-size: 0.85rem; width: 14px; text-align: center; color: white;">{{ item.cantidad }}</span>
+            <button (click)="modifyQty(i, 1)" style="width: 22px; height: 22px; background-color: var(--linea); color: white; border: none; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+              <span class="material-symbols-outlined" style="font-size: 0.85rem;">add</span>
+            </button>
+            <button (click)="removeFromCart(i)" style="background: transparent; border: none; color: var(--rojo); cursor: pointer; padding: 0 4px; display: inline-flex; align-items: center;">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Carrito -->
+    <div style="padding: 24px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px);">
+      <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 1.15rem; color: white; margin-bottom: 20px;">
+        <span style="letter-spacing: 0.05em;">TOTAL:</span>
+        <span style="color: var(--rojo); text-shadow: 0 0 10px rgba(225, 29, 72, 0.3);">S/ {{ totalCart | number:'1.2-2' }}</span>
+      </div>
+      
+      <button (click)="confirmarPedidoCart()" class="btn-premium-rojo" style="width: 100%; height: 48px; font-weight: 900; font-size: 0.8rem; letter-spacing: 0.15em;" [disabled]="cart.length === 0">
+        CONFIRMAR PEDIDO
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Contenedor de Notificaciones (Toasts) a la derecha -->
+<div class="toast-container">
+  <div *ngFor="let t of toasts" class="toast-card">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="material-symbols-outlined" style="color: var(--verde-ok); font-size: 1.25rem;">check_circle</span>
+      <span>{{ t.mensaje }}</span>
+    </div>
+  </div>
+</div>

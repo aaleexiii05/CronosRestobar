@@ -21,6 +21,21 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String nombre;
 
+    @Column(unique = true, length = 20)
+    private String dni;
+
+    @Column(length = 100)
+    private String nombres;
+
+    @Column(name = "apellido_paterno", length = 100)
+    private String apellidoPaterno;
+
+    @Column(name = "apellido_materno", length = 100)
+    private String apellidoMaterno;
+
+    @Column(length = 20)
+    private String telefono;
+
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
@@ -46,7 +61,7 @@ public class Usuario {
         ADMIN,
         CAJERO,
         MOZO,
-        COCINA,
+        COCINERO,
         CLIENTE
     }
 }

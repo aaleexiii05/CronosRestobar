@@ -49,4 +49,10 @@ public class ReservaController {
                                                      @RequestParam Reserva.EstadoReserva estado) {
         return ResponseEntity.ok(reservaService.cambiarEstado(id, estado));
     }
+
+    @PatchMapping("/{id}/ampliar-minutos")
+    public ResponseEntity<ReservaDTO> ampliarMinutos(@PathVariable Long id,
+                                                     @RequestParam int minutos) {
+        return ResponseEntity.ok(reservaService.ampliarMinutos(id, minutos));
+    }
 }

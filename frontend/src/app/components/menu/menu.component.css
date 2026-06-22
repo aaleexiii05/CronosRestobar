@@ -1,0 +1,54 @@
+/* Estilos específicos para la vista del Menú completo */
+.filter-btn {
+  background-color: rgba(255, 255, 255, 0.02);
+  color: var(--txt-sub);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px 18px;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filter-btn.active {
+  background-color: var(--rojo);
+  color: white;
+  border-color: var(--rojo);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.badge-normal {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background-color: var(--rojo);
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+}
+
+.badge-premium {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1px solid var(--dorado);
+  color: var(--dorado);
+  padding: 3px 8px;
+  font-weight: bold;
+}
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

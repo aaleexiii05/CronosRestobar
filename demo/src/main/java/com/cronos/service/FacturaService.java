@@ -25,6 +25,7 @@ public class FacturaService {
     private final FacturaRepository facturaRepository;
     private final PedidoRepository pedidoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ConsultaSunatReniecService consultaService;
 
     public List<FacturaDTO> listarTodas() {
         return facturaRepository.findAll()
@@ -57,23 +58,71 @@ public class FacturaService {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + dto.getUsuarioId()));
 
-        BigDecimal subtotal = pedido.getTotal().divide(BigDecimal.valueOf(1.18), 2, RoundingMode.HALF_UP);
-        BigDecimal igv = pedido.getTotal().subtract(subtotal);
+        BigDecimal total = pedido.getTotal();
+        BigDecimal subtotal = total.divide(BigDecimal.valueOf(1.18), 2, RoundingMode.HALF_UP);
+        BigDecimal igv = total.subtract(subtotal);
+
+        // Auto-completar datos según tipo de comprobante
+        String clienteNombre = dto.getClienteNombre();
+        String clienteDocumento = dto.getClienteDocumento();
+        String razonSocial = dto.getRazonSocial();
+
+        if (dto.getTipoComprobante() == Factura.TipoComprobante.FACTURA) {
+            if (dto.getClienteRuc() == null || dto.getClienteRuc().trim().length() != 11) {
+                throw new IllegalArgumentException("El RUC es obligatorio y debe tener 11 dígitos para una Factura.");
+            }
+            // Consultar SUNAT
+            java.util.Map<String, String> sunatData = consultaService.consultarSunat(dto.getClienteRuc());
+            razonSocial = sunatData.get("razonSocial");
+            clienteNombre = razonSocial; 
+        } else {
+            // Boleta: usar datos del usuario si están vacíos
+            if (clienteNombre == null || clienteNombre.trim().isEmpty()) {
+                clienteNombre = usuario.getNombre();
+            }
+            if (clienteDocumento == null || clienteDocumento.trim().isEmpty()) {
+                clienteDocumento = usuario.getDni() != null ? usuario.getDni() : "";
+            }
+        }
+
+        // Lógica de cálculo y validación de pago
+        BigDecimal montoRecibido = null;
+        BigDecimal vuelto = null;
+        BigDecimal montoPagado = total;
+        Factura.EstadoPago estadoPago = Factura.EstadoPago.APROBADO;
+        LocalDateTime fechaPago = LocalDateTime.now();
+
+        if (dto.getMetodoPago() == Factura.MetodoPago.EFECTIVO) {
+            if (dto.getMontoRecibido() == null || dto.getMontoRecibido().compareTo(total) < 0) {
+                throw new IllegalArgumentException("El monto recibido en efectivo es menor al total a pagar (" + total + ").");
+            }
+            montoRecibido = dto.getMontoRecibido();
+            vuelto = montoRecibido.subtract(total);
+        } else if (dto.getMetodoPago() == Factura.MetodoPago.MERCADO_PAGO) {
+            if (dto.getTransaccionId() == null || dto.getTransaccionId().trim().isEmpty()) {
+                throw new IllegalArgumentException("El ID de transacción de Mercado Pago es obligatorio.");
+            }
+        }
 
         Factura factura = Factura.builder()
                 .pedido(pedido)
                 .usuario(usuario)
                 .numeroComprobante(generarNumeroComprobante(dto.getTipoComprobante()))
                 .tipoComprobante(dto.getTipoComprobante())
-                .clienteNombre(dto.getClienteNombre())
-                .clienteDocumento(dto.getClienteDocumento())
+                .clienteNombre(clienteNombre)
+                .clienteDocumento(clienteDocumento)
                 .clienteRuc(dto.getClienteRuc())
-                .razonSocial(dto.getRazonSocial())
+                .razonSocial(razonSocial)
                 .subtotal(subtotal)
                 .igv(igv)
-                .total(pedido.getTotal())
+                .total(total)
                 .metodoPago(dto.getMetodoPago())
                 .transaccionId(dto.getTransaccionId())
+                .montoRecibido(montoRecibido)
+                .vuelto(vuelto)
+                .montoPagado(montoPagado)
+                .estadoPago(estadoPago)
+                .fechaPago(fechaPago)
                 .build();
 
         pedido.getDetalles().forEach(detalle -> {
@@ -116,6 +165,11 @@ public class FacturaService {
                 .total(factura.getTotal())
                 .metodoPago(factura.getMetodoPago())
                 .transaccionId(factura.getTransaccionId())
+                .fechaPago(factura.getFechaPago())
+                .estadoPago(factura.getEstadoPago())
+                .montoPagado(factura.getMontoPagado())
+                .montoRecibido(factura.getMontoRecibido())
+                .vuelto(factura.getVuelto())
                 .fechaEmision(factura.getFechaEmision())
                 .detalles(factura.getDetalles().stream().map(this::detalleToDTO).collect(Collectors.toList()))
                 .build();

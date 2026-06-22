@@ -54,6 +54,16 @@ public class FacturaDTO {
 
     private String transaccionId;
 
+    private LocalDateTime fechaPago;
+
+    private Factura.EstadoPago estadoPago;
+
+    private BigDecimal montoPagado;
+
+    private BigDecimal montoRecibido;
+
+    private BigDecimal vuelto;
+
     private LocalDateTime fechaEmision;
 
     private List<DetalleFacturaDTO> detalles;

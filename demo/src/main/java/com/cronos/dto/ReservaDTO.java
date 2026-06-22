@@ -1,6 +1,7 @@
 package com.cronos.dto;
 
 import com.cronos.entity.Reserva;
+import com.cronos.entity.Factura;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -56,4 +59,22 @@ public class ReservaDTO {
     private LocalDateTime fechaCreacion;
 
     private Long usuarioRegistroId;
+
+    private LocalTime horaComida;
+
+    private boolean comidaServidaCaliente;
+
+    private Integer minutosAdicionales;
+
+    private PedidoDTO pedido;
+
+    private List<DetallePedidoDTO> detallesPedido;
+
+    private Factura.MetodoPago metodoPago;
+
+    private String transaccionId;
+
+    private Factura.TipoComprobante tipoComprobante;
+
+    private String clienteRuc;
 }

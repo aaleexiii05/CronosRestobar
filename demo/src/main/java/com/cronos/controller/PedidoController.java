@@ -3,11 +3,13 @@ package com.cronos.controller;
 import com.cronos.dto.PedidoDTO;
 import com.cronos.entity.Pedido;
 import com.cronos.service.PedidoService;
+import com.cronos.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final NotificationService notificationService;
 
     @GetMapping
     public ResponseEntity<List<PedidoDTO>> listarTodos() {
@@ -48,5 +51,20 @@ public class PedidoController {
     public ResponseEntity<Void> cancelar(@PathVariable Long id) {
         pedidoService.cancelar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/listo")
+    public ResponseEntity<PedidoDTO> marcarListo(@PathVariable Long id) {
+        return ResponseEntity.ok(pedidoService.marcarListo(id));
+    }
+
+    @GetMapping("/pendientes-cobro")
+    public ResponseEntity<List<PedidoDTO>> listarPendientesDeCobro() {
+        return ResponseEntity.ok(pedidoService.listarPedidosPendientesDeCobro());
+    }
+
+    @GetMapping("/notificaciones")
+    public SseEmitter notificaciones() {
+        return notificationService.registrarCliente();
     }
 }

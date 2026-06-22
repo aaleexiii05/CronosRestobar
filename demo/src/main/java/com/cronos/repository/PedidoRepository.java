@@ -19,4 +19,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);
 
     List<Pedido> findByMesaIdAndEstadoNot(Long mesaId, Pedido.EstadoPedido estado);
+
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM Pedido p LEFT JOIN Factura f ON f.pedido = p WHERE (f IS NULL OR f.estadoPago != :estadoPago) AND p.estado != :estadoPedido")
+    List<Pedido> findPedidosPendientesDeCobro(
+            @org.springframework.data.repository.query.Param("estadoPago") com.cronos.entity.Factura.EstadoPago estadoPago,
+            @org.springframework.data.repository.query.Param("estadoPedido") com.cronos.entity.Pedido.EstadoPedido estadoPedido
+    );
 }

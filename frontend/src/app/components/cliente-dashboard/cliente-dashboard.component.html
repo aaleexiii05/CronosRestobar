@@ -1,0 +1,122 @@
+<div style="display: flex; flex-direction: column; min-height: 100vh; background: linear-gradient(rgba(10, 16, 28, 0.72), rgba(6, 9, 17, 0.85)), url('/reservas_bg.png') center/cover no-repeat fixed;">
+  
+  <!-- HEADER STICKY -->
+  <header style="position: sticky; top: 0; z-index: 100; background: rgba(13, 13, 13, 0.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--linea); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem;">
+    <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" routerLink="/">
+      <span class="material-symbols-outlined" style="color: var(--dorado); font-size: 1.8rem;">hourglass_empty</span>
+      <span style="letter-spacing: 0.18em; font-weight: 900; color: white; font-size: 1.25rem;">CRONOS</span>
+      <div style="width: 1px; height: 18px; background-color: var(--rojo);"></div>
+      <span style="color: var(--txt-sub); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;">RESTOBAR</span>
+    </div>
+
+    <nav style="display: flex; gap: 2rem;">
+      <a class="nav-link" routerLink="/">Inicio</a>
+      <a class="nav-link" routerLink="/menu">Menú</a>
+      <a class="nav-link active" routerLink="/cliente" style="color: var(--dorado);">Mis Reservas</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <span style="font-size: 0.8rem; color: var(--txt-sub);">Hola, {{ usuario?.nombres || usuario?.nombre }}</span>
+      <button (click)="logout()" style="background: transparent; border: 1px solid var(--linea); color: var(--txt-sub); padding: 6px 12px; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="material-symbols-outlined" style="font-size: 0.95rem;">logout</span>
+        <span>Salir</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PORTAL CLIENTE -->
+  <main style="max-width: 1100px; width: 100%; margin: 0 auto; padding: 3rem 20px 4rem; flex: 1;">
+    
+    <!-- Tarjeta de Perfil -->
+    <div style="background-color: var(--carbon); border: 1px solid var(--linea); padding: 25px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--dorado); flex-wrap: wrap; gap: 20px;">
+      <div>
+        <div style="font-size: 0.62rem; color: var(--dorado); letter-spacing: 0.15em; text-transform: uppercase; font-weight: bold; margin-bottom: 4px;">Perfil del Cliente</div>
+        <h2 style="font-weight: 900; color: white; margin: 0 0 8px 0; font-size: 1.6rem;">{{ usuario?.nombre || usuario?.nombres | uppercase }}</h2>
+        <p style="color: var(--txt-sub); font-size: 0.85rem; margin: 0;">
+          DNI: <strong>{{ usuario?.dni }}</strong> | Correo: <strong>{{ usuario?.email }}</strong> | Teléfono: <strong>{{ usuario?.telefono }}</strong>
+        </p>
+      </div>
+      <button class="btn-premium-secundario" routerLink="/menu" style="display: flex; align-items: center; gap: 8px;">
+        <span class="material-symbols-outlined" style="font-size: 1.1rem;">restaurant_menu</span>
+        <span>Ordenar Comida</span>
+      </button>
+    </div>
+
+    <!-- Tabla Histórico Reservas -->
+    <div style="background-color: var(--carbon); border: 1px solid var(--linea); padding: 25px;">
+      <h3 style="font-weight: bold; color: white; margin: 0 0 16px 0; border-bottom: 1px solid var(--linea); padding-bottom: 10px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+        <span class="material-symbols-outlined" style="color: var(--rojo);">history</span>
+        <span>HISTORIAL DE MIS RESERVAS</span>
+      </h3>
+
+      <div *ngIf="reservas.length === 0" style="text-align: center; padding: 60px 0; color: var(--txt-sub);">
+        <span class="material-symbols-outlined" style="font-size: 3rem; display: block; margin-bottom: 15px; color: var(--txt-dim);">calendar_today</span>
+        Usted no registra reservas anteriores en el restobar.
+      </div>
+
+      <div *ngIf="reservas.length > 0" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 700px;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--linea); color: white; background: rgba(0,0,0,0.2);">
+              <th style="padding: 12px 10px;">ID</th>
+              <th style="padding: 12px 10px;">Mesa</th>
+              <th style="padding: 12px 10px;">Fecha / Turno</th>
+              <th style="padding: 12px 10px;">Comensales</th>
+              <th style="padding: 12px 10px;">Pre-pedido</th>
+              <th style="padding: 12px 10px;">Estado</th>
+              <th style="padding: 12px 10px; text-align: center;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let res of reservas" style="border-bottom: 1px solid var(--linea);">
+              <td style="padding: 12px 10px; font-weight: bold; color: var(--txt-sub);">#{{ res.id }}</td>
+              <td style="padding: 12px 10px; color: white;">Mesa N° {{ res.mesaNumero }}</td>
+              <td style="padding: 12px 10px;">
+                <div>{{ res.fecha | date:'dd/MM/yyyy' }}</div>
+                <div style="font-size: 0.75rem; color: var(--txt-sub);">Turno: {{ res.turno }}</div>
+              </td>
+              <td style="padding: 12px 10px;">{{ res.numPersonas }} personas</td>
+              <td style="padding: 12px 10px;">
+                <div *ngIf="res.pedido" style="font-size: 0.8rem; color: var(--dorado); font-weight: bold;">
+                  S/ {{ res.pedido.total | number:'1.2-2' }}
+                </div>
+                <div *ngIf="!res.pedido" style="color: var(--txt-dim); font-style: italic; font-size: 0.8rem;">Ninguno</div>
+              </td>
+              <td style="padding: 12px 10px;">
+                <span [style.color]="res.estado === 'CONFIRMADA' ? 'var(--verde-ok)' : (res.estado === 'CANCELADA' ? 'var(--rojo)' : 'orange')" style="font-weight: bold; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 4px;">
+                  <span class="material-symbols-outlined" style="font-size: 0.95rem;">
+                    {{ res.estado === 'CONFIRMADA' ? 'check_circle' : (res.estado === 'CANCELADA' ? 'cancel' : 'pending') }}
+                  </span>
+                  <span>{{ res.estado }}</span>
+                </span>
+              </td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <div *ngIf="res.estado !== 'CANCELADA' && res.estado !== 'COMPLETADA'" style="display: flex; gap: 8px; justify-content: center;">
+                  <button class="btn-premium-secundario btn-xs" (click)="ampliarTolerancia(res.id)" style="font-size: 0.7rem; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                    <span class="material-symbols-outlined" style="font-size: 0.85rem;">more_time</span>
+                    <span>+15 min</span>
+                  </button>
+                  <button class="btn-premium-rojo btn-xs" (click)="cancelarReserva(res.id)" style="font-size: 0.7rem; padding: 4px 8px; display: flex; align-items: center; gap: 4px;">
+                    <span class="material-symbols-outlined" style="font-size: 0.85rem;">delete</span>
+                    <span>Cancelar</span>
+                  </button>
+                </div>
+                <span *ngIf="res.estado === 'CANCELADA' || res.estado === 'COMPLETADA'" style="color: var(--txt-dim); font-size: 0.8rem; font-style: italic;">
+                  Sin acciones
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background-color: var(--carbon); border-top: 1px solid var(--linea); padding: 30px; text-align: center; font-size: 0.8rem; color: var(--txt-dim);">
+    <p style="margin-bottom: 8px;">⧗ CRONOS RESTOBAR © 2026. Todos los derechos reservados.</p>
+    <p style="color: var(--txt-dim); font-size: 0.72rem;">Desarrollado para validación de negocio y facturación electrónica simulada.</p>
+  </footer>
+
+</div>

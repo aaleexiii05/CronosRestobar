@@ -48,14 +48,15 @@ public class SecurityConfig {
 
                         // Endpoints públicos
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/consultas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/mesas/**").permitAll()
 
                         // Solo ADMIN
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers("/api/insumos/**").hasAnyRole("ADMIN", "COCINA")
-                        .requestMatchers("/api/movimientos-stock/**").hasAnyRole("ADMIN", "COCINA")
+                        .requestMatchers("/api/insumos/**").hasAnyRole("ADMIN", "COCINERO")
+                        .requestMatchers("/api/movimientos-stock/**").hasAnyRole("ADMIN", "COCINERO")
                         .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")

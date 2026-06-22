@@ -2,6 +2,7 @@ package com.cronos.controller;
 
 import com.cronos.dto.MesaDTO;
 import com.cronos.entity.Mesa;
+import com.cronos.entity.Reserva;
 import com.cronos.service.MesaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -59,5 +61,12 @@ public class MesaController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         mesaService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<MesaDTO>> listarDisponibles(@RequestParam LocalDate fecha,
+                                                           @RequestParam Reserva.Turno turno,
+                                                           @RequestParam(required = false) Integer numPersonas) {
+        return ResponseEntity.ok(mesaService.listarMesasDisponibles(fecha, turno, numPersonas));
     }
 }

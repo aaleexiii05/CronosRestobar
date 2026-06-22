@@ -2,12 +2,15 @@ package com.cronos.service;
 
 import com.cronos.dto.MesaDTO;
 import com.cronos.entity.Mesa;
+import com.cronos.entity.Reserva;
 import com.cronos.repository.MesaRepository;
+import com.cronos.repository.ReservaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class MesaService {
 
     private final MesaRepository mesaRepository;
+    private final ReservaRepository reservaRepository;
 
     public List<MesaDTO> listarTodas() {
         return mesaRepository.findByActivaTrue()
@@ -100,5 +104,24 @@ public class MesaService {
                 .ubicacion(dto.getUbicacion())
                 .activa(true)
                 .build();
+    }
+
+    public List<MesaDTO> listarMesasDisponibles(LocalDate fecha, Reserva.Turno turno, Integer numPersonas) {
+        List<Mesa> mesasActivas = mesaRepository.findByActivaTrue();
+        return mesasActivas.stream()
+                .filter(mesa -> {
+                    if (numPersonas != null && mesa.getCapacidad() < numPersonas) {
+                        return false;
+                    }
+                    boolean ocupada = reservaRepository.existsByMesaIdAndFechaAndTurnoAndEstadoNot(
+                            mesa.getId(),
+                            fecha,
+                            turno,
+                            Reserva.EstadoReserva.CANCELADA
+                    );
+                    return !ocupada;
+                })
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -64,6 +64,23 @@ public class Factura {
     @Column(name = "transaccion_id", length = 100)
     private String transaccionId;
 
+    @Column(name = "fecha_pago")
+    private LocalDateTime fechaPago;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_pago", nullable = false, length = 20)
+    @Builder.Default
+    private EstadoPago estadoPago = EstadoPago.PENDIENTE;
+
+    @Column(name = "monto_pagado", precision = 10, scale = 2)
+    private BigDecimal montoPagado;
+
+    @Column(name = "monto_recibido", precision = 10, scale = 2)
+    private BigDecimal montoRecibido;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal vuelto;
+
     @Column(name = "fecha_emision", nullable = false)
     @Builder.Default
     private LocalDateTime fechaEmision = LocalDateTime.now();
@@ -79,11 +96,13 @@ public class Factura {
 
     public enum MetodoPago {
         EFECTIVO,
-        TARJETA_CREDITO,
-        TARJETA_DEBITO,
-        TRANSFERENCIA,
-        YAPE,
-        PLIN,
         MERCADO_PAGO
+    }
+
+    public enum EstadoPago {
+        PENDIENTE,
+        APROBADO,
+        RECHAZADO,
+        ANULADO
     }
 }

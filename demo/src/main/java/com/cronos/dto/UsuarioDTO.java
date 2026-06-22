@@ -22,9 +22,20 @@ public class UsuarioDTO {
 
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 2, max = 100)
     private String nombre;
+
+    @NotBlank(message = "El DNI es obligatorio")
+    @Size(min = 8, max = 8, message = "El DNI debe tener 8 dígitos")
+    private String dni;
+
+    private String nombres;
+
+    private String apellidoPaterno;
+
+    private String apellidoMaterno;
+
+    @NotBlank(message = "El teléfono es obligatorio")
+    private String telefono;
 
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "Formato de email inválido")
@@ -33,7 +44,6 @@ public class UsuarioDTO {
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
 
-    @NotNull(message = "El rol es obligatorio")
     private Usuario.Rol rol;
 
     private boolean activo;
