@@ -15,39 +15,39 @@ public class GatewayConfig {
                 .route("auth-service", r -> r
                         .path("/api/auth/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(false))))
-                        .uri("http://localhost:8081"))
+                        .uri("lb://auth-service"))
                 .route("auth-internal", r -> r
                         .path("/api/internal/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(false))))
-                        .uri("http://localhost:8081"))
+                        .uri("lb://auth-service"))
                 .route("menu-service", r -> r
                         .path("/api/productos/**", "/api/categorias/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8082"))
+                        .uri("lb://menu-service"))
                 .route("order-service", r -> r
                         .path("/api/pedidos/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8083"))
+                        .uri("lb://order-service"))
                 .route("billing-service", r -> r
                         .path("/api/facturas/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8084"))
+                        .uri("lb://billing-service"))
                 .route("inventory-service", r -> r
                         .path("/api/insumos/**", "/api/movimientos-stock/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8085"))
+                        .uri("lb://inventory-service"))
                 .route("reservation-service", r -> r
                         .path("/api/mesas/**", "/api/reservas/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8086"))
+                        .uri("lb://reservation-service"))
                 .route("notification-service", r -> r
                         .path("/api/notificaciones/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8088"))
+                        .uri("lb://notification-service"))
                 .route("consulta-service", r -> r
                         .path("/api/consultas/**")
-                        .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
-                        .uri("http://localhost:8087"))
+                        .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(false))))
+                        .uri("lb://consulta-service"))
                 .build();
     }
 }

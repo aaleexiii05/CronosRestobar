@@ -114,6 +114,35 @@ public class PedidoService {
         notificationService.enviarNotificacion("ESTADO_PEDIDO", dto);
     }
 
+    public List<PedidoDTO> listarPendientesDeCobro() {
+        return pedidoRepository.findByEstadoNot(Pedido.EstadoPedido.CANCELADO)
+                .stream()
+                .filter(p -> p.getTotal() != null && p.getTotal().compareTo(BigDecimal.ZERO) > 0)
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public PedidoDTO actualizar(Long id, PedidoDTO dto) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + id));
+        if (dto.getMesaId() != null) {
+            pedido.setMesaId(dto.getMesaId());
+        }
+        if (dto.getMesaNumero() != null) {
+            pedido.setMesaNumero(dto.getMesaNumero());
+        }
+        if (dto.getObservaciones() != null) {
+            pedido.setObservaciones(dto.getObservaciones());
+        }
+        return toDTO(pedidoRepository.save(pedido));
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        cancelar(id);
+    }
+
     private BigDecimal calcularTotal(List<DetallePedido> detalles) {
         return detalles.stream()
                 .map(d -> d.getPrecioUnitario().multiply(BigDecimal.valueOf(d.getCantidad())))

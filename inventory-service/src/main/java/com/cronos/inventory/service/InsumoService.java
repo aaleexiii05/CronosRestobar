@@ -17,6 +17,13 @@ public class InsumoService {
 
     private final InsumoRepository insumoRepository;
 
+    public List<InsumoDTO> listarTodos() {
+        return insumoRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<InsumoDTO> listarActivos() {
         return insumoRepository.findByActivoTrue()
                 .stream()

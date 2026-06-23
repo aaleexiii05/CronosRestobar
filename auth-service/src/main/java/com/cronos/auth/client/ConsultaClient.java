@@ -9,14 +9,18 @@ import java.util.Map;
 @Component
 public class ConsultaClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+    private final String consultaServiceUrl;
 
-    @Value("${consulta.service.url:http://localhost:8087/api/consultas}")
-    private String consultaServiceUrl;
+    public ConsultaClient(RestTemplate restTemplate,
+                          @Value("${consulta.service.url}") String consultaServiceUrl) {
+        this.restTemplate = restTemplate;
+        this.consultaServiceUrl = consultaServiceUrl;
+    }
 
     @SuppressWarnings("unchecked")
     public Map<String, String> consultarReniec(String dni) {
-        String url = consultaServiceUrl + "/reniec/" + dni;
+        String url = consultaServiceUrl + "/api/consultas/reniec/" + dni;
         return restTemplate.getForObject(url, Map.class);
     }
 }

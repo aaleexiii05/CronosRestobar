@@ -50,9 +50,21 @@ public class ReservaController {
         return ResponseEntity.ok(reservaService.cambiarEstado(id, estado));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservaDTO> actualizar(@PathVariable Long id,
+                                                  @RequestBody ReservaDTO dto) {
+        return ResponseEntity.ok(reservaService.actualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        reservaService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/ampliar-minutos")
     public ResponseEntity<ReservaDTO> ampliarMinutos(@PathVariable Long id,
-                                                      @RequestParam int minutos) {
+                                                       @RequestParam int minutos) {
         return ResponseEntity.ok(reservaService.ampliarMinutos(id, minutos));
     }
 }

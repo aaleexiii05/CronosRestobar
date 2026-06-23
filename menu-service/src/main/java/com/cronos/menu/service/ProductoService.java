@@ -27,6 +27,13 @@ public class ProductoService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProductoDTO> listarTodos() {
+        return productoRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ProductoDTO> listarPorCategoria(Long categoriaId) {
         return productoRepository.findByCategoriaIdAndActivoTrue(categoriaId)
                 .stream()

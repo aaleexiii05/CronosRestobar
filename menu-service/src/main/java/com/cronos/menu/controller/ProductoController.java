@@ -18,7 +18,10 @@ public class ProductoController {
     private final ProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<List<ProductoDTO>> listarDisponibles() {
+    public ResponseEntity<List<ProductoDTO>> listar(@RequestParam(defaultValue = "false") boolean todas) {
+        if (todas) {
+            return ResponseEntity.ok(productoService.listarTodos());
+        }
         return ResponseEntity.ok(productoService.listarDisponibles());
     }
 

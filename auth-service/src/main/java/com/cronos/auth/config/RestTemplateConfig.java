@@ -1,4 +1,4 @@
-package com.cronos.order.config;
+package com.cronos.auth.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

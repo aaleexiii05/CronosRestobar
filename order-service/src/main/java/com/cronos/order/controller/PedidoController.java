@@ -47,6 +47,23 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.cambiarEstado(id, estado));
     }
 
+    @GetMapping("/pendientes-cobro")
+    public ResponseEntity<List<PedidoDTO>> listarPendientesDeCobro() {
+        return ResponseEntity.ok(pedidoService.listarPendientesDeCobro());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PedidoDTO> actualizar(@PathVariable Long id,
+                                                 @RequestBody PedidoDTO dto) {
+        return ResponseEntity.ok(pedidoService.actualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        pedidoService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/cancelar")
     public ResponseEntity<Void> cancelar(@PathVariable Long id) {
         pedidoService.cancelar(id);

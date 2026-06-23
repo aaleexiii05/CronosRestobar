@@ -18,13 +18,11 @@ public class CategoriaController {
     private final CategoriaService categoriaService;
 
     @GetMapping
-    public ResponseEntity<List<CategoriaDTO>> listarActivas() {
+    public ResponseEntity<List<CategoriaDTO>> listar(@RequestParam(defaultValue = "false") boolean todas) {
+        if (todas) {
+            return ResponseEntity.ok(categoriaService.listarTodas());
+        }
         return ResponseEntity.ok(categoriaService.listarActivas());
-    }
-
-    @GetMapping("/todas")
-    public ResponseEntity<List<CategoriaDTO>> listarTodas() {
-        return ResponseEntity.ok(categoriaService.listarTodas());
     }
 
     @GetMapping("/{id}")

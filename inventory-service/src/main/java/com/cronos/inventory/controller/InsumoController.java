@@ -18,7 +18,10 @@ public class InsumoController {
     private final InsumoService insumoService;
 
     @GetMapping
-    public ResponseEntity<List<InsumoDTO>> listarActivos() {
+    public ResponseEntity<List<InsumoDTO>> listar(@RequestParam(defaultValue = "false") boolean todas) {
+        if (todas) {
+            return ResponseEntity.ok(insumoService.listarTodos());
+        }
         return ResponseEntity.ok(insumoService.listarActivos());
     }
 

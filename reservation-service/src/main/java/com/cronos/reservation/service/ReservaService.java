@@ -214,6 +214,34 @@ public class ReservaService {
     }
 
     @Transactional
+    public ReservaDTO actualizar(Long id, ReservaDTO dto) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reserva no encontrada con id: " + id));
+        if (dto.getMesaId() != null) {
+            Mesa mesa = mesaRepository.findById(dto.getMesaId())
+                    .orElseThrow(() -> new EntityNotFoundException("Mesa no encontrada con id: " + dto.getMesaId()));
+            reserva.setMesaId(mesa.getId());
+            reserva.setMesaNumero(mesa.getNumero());
+        }
+        if (dto.getClienteNombre() != null) reserva.setClienteNombre(dto.getClienteNombre());
+        if (dto.getClienteTelefono() != null) reserva.setClienteTelefono(dto.getClienteTelefono());
+        if (dto.getClienteEmail() != null) reserva.setClienteEmail(dto.getClienteEmail());
+        if (dto.getFecha() != null) reserva.setFecha(dto.getFecha());
+        if (dto.getTurno() != null) reserva.setTurno(dto.getTurno());
+        if (dto.getNumPersonas() != null) reserva.setNumPersonas(dto.getNumPersonas());
+        if (dto.getObservaciones() != null) reserva.setObservaciones(dto.getObservaciones());
+        if (dto.getHoraComida() != null) reserva.setHoraComida(dto.getHoraComida());
+        reserva.setComidaServidaCaliente(dto.isComidaServidaCaliente());
+        if (dto.getMinutosAdicionales() != null) reserva.setMinutosAdicionales(dto.getMinutosAdicionales());
+        return toDTO(reservaRepository.save(reserva));
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        cambiarEstado(id, Reserva.EstadoReserva.CANCELADA);
+    }
+
+    @Transactional
     public ReservaDTO ampliarMinutos(Long id, int minutos) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva no encontrada con id: " + id));
