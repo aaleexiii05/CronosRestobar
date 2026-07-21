@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY gateway-service/pom.xml .
+COPY gateway-service/src ./src
 RUN apt-get update && apt-get install -y maven && \
     mvn clean package -DskipTests
 
