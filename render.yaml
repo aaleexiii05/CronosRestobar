@@ -1,0 +1,232 @@
+services:
+  - type: web
+    name: eureka-server
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: eureka-server
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: SERVER_PORT
+        value: "8761"
+
+  - type: web
+    name: gateway-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: gateway-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: JWT_SECRET
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+      - key: ALLOWED_ORIGINS
+        value: https://cronos-restobar.vercel.app
+
+  - type: web
+    name: auth-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: auth-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+      - key: ALLOWED_ORIGINS
+        value: https://cronos-restobar.vercel.app
+
+  - type: web
+    name: order-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: order-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+
+  - type: web
+    name: billing-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: billing-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_BACK_URL_SUCCESS
+        value: https://cronos-restobar.vercel.app/cliente
+      - key: MP_BACK_URL_FAILURE
+        value: https://cronos-restobar.vercel.app/checkout
+      - key: MP_WEBHOOK_URL
+        sync: false
+
+  - type: web
+    name: menu-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: menu-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+
+  - type: web
+    name: inventory-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: inventory-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+
+  - type: web
+    name: reservation-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: reservation-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USERNAME
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+
+  - type: web
+    name: notification-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: notification-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+
+  - type: web
+    name: consulta-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: consulta-service
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms256m -Xmx512m
+      - key: EUREKA_URL
+        fromService:
+          name: eureka-server
+          type: web
+          property: host
+          addPrefix: /eureka/
+      - key: APIPERU_TOKEN
+        sync: false
