@@ -2,8 +2,7 @@ services:
   - type: web
     name: eureka-server
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: eureka-server
+    dockerfilePath: eureka-server/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -15,8 +14,7 @@ services:
   - type: web
     name: gateway-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: gateway-service
+    dockerfilePath: gateway-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -36,8 +34,7 @@ services:
   - type: web
     name: auth-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: auth-service
+    dockerfilePath: auth-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -65,8 +62,7 @@ services:
   - type: web
     name: order-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: order-service
+    dockerfilePath: order-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -90,8 +86,7 @@ services:
   - type: web
     name: billing-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: billing-service
+    dockerfilePath: billing-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -123,8 +118,7 @@ services:
   - type: web
     name: menu-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: menu-service
+    dockerfilePath: menu-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -148,8 +142,7 @@ services:
   - type: web
     name: inventory-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: inventory-service
+    dockerfilePath: inventory-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -173,8 +166,7 @@ services:
   - type: web
     name: reservation-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: reservation-service
+    dockerfilePath: reservation-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -198,8 +190,7 @@ services:
   - type: web
     name: notification-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: notification-service
+    dockerfilePath: notification-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:
@@ -215,8 +206,7 @@ services:
   - type: web
     name: consulta-service
     runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: consulta-service
+    dockerfilePath: consulta-service/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     envVars:

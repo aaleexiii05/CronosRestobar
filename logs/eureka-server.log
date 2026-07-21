@@ -1,0 +1,102 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.4)
+
+2026-06-22T19:25:29.730-05:00  INFO 80991 --- [eureka-server] [           main] c.cronos.eureka.EurekaServerApplication  : Starting EurekaServerApplication v1.0.0 using Java 25.0.3 with PID 80991 (/Users/aldair/GitHub/CronosRestobar/eureka-server/target/eureka-server-1.0.0.jar started by aldair in /Users/aldair/GitHub/CronosRestobar/eureka-server)
+2026-06-22T19:25:29.731-05:00  INFO 80991 --- [eureka-server] [           main] c.cronos.eureka.EurekaServerApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-06-22T19:25:30.351-05:00  INFO 80991 --- [eureka-server] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=8f3ec10f-59cd-397d-82f3-7da97306a40e
+2026-06-22T19:25:30.382-05:00  WARN 80991 --- [eureka-server] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-06-22T19:25:30.384-05:00  WARN 80991 --- [eureka-server] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (jar:nested:/Users/aldair/GitHub/CronosRestobar/eureka-server/target/eureka-server-1.0.0.jar/!BOOT-INF/lib/tomcat-embed-core-10.1.19.jar!/)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-06-22T19:25:30.522-05:00  INFO 80991 --- [eureka-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8761 (http)
+2026-06-22T19:25:30.528-05:00  INFO 80991 --- [eureka-server] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-22T19:25:30.528-05:00  INFO 80991 --- [eureka-server] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2026-06-22T19:25:30.544-05:00  INFO 80991 --- [eureka-server] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-22T19:25:30.545-05:00  INFO 80991 --- [eureka-server] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 769 ms
+2026-06-22T19:25:31.155-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-06-22T19:25:31.155-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider (jar:nested:/Users/aldair/GitHub/CronosRestobar/eureka-server/target/eureka-server-1.0.0.jar/!BOOT-INF/lib/xstream-1.4.19.jar!/)
+WARNING: Please consider reporting this to the maintainers of class com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-06-22T19:25:31.306-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-06-22T19:25:31.306-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-06-22T19:25:31.836-05:00  WARN 80991 --- [eureka-server] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-06-22T19:25:31.854-05:00  INFO 80991 --- [eureka-server] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-06-22T19:25:31.870-05:00  INFO 80991 --- [eureka-server] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-06-22T19:25:31.870-05:00  INFO 80991 --- [eureka-server] [           main] com.netflix.discovery.DiscoveryClient    : Client configured to neither register nor query for data.
+2026-06-22T19:25:31.876-05:00  INFO 80991 --- [eureka-server] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1782174331875 with initial instances count: 0
+2026-06-22T19:25:31.905-05:00  INFO 80991 --- [eureka-server] [           main] c.n.eureka.DefaultEurekaServerContext    : Initializing ...
+2026-06-22T19:25:31.908-05:00  INFO 80991 --- [eureka-server] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Adding new peer nodes [http://localhost:8761/eureka/]
+2026-06-22T19:25:31.990-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-06-22T19:25:31.990-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-06-22T19:25:31.991-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-06-22T19:25:31.991-05:00  INFO 80991 --- [eureka-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-06-22T19:25:32.090-05:00  INFO 80991 --- [eureka-server] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Replica node URL:  http://localhost:8761/eureka/
+2026-06-22T19:25:32.094-05:00  INFO 80991 --- [eureka-server] [           main] c.n.e.registry.AbstractInstanceRegistry  : Finished initializing remote region registries. All known remote regions: []
+2026-06-22T19:25:32.095-05:00  INFO 80991 --- [eureka-server] [           main] c.n.eureka.DefaultEurekaServerContext    : Initialized
+2026-06-22T19:25:32.104-05:00  INFO 80991 --- [eureka-server] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-06-22T19:25:32.143-05:00  INFO 80991 --- [eureka-server] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application EUREKA-SERVER with eureka with status UP
+2026-06-22T19:25:32.150-05:00  INFO 80991 --- [eureka-server] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : isAws returned false
+2026-06-22T19:25:32.150-05:00  INFO 80991 --- [eureka-server] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : Initialized server context
+2026-06-22T19:25:32.150-05:00  INFO 80991 --- [eureka-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Got 1 instances from neighboring DS node
+2026-06-22T19:25:32.150-05:00  INFO 80991 --- [eureka-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Renew threshold is: 1
+2026-06-22T19:25:32.151-05:00  INFO 80991 --- [eureka-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Changing status to UP
+2026-06-22T19:25:32.156-05:00  INFO 80991 --- [eureka-server] [       Thread-9] e.s.EurekaServerInitializerConfiguration : Started Eureka Server
+2026-06-22T19:25:32.164-05:00  INFO 80991 --- [eureka-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8761 (http) with context path ''
+2026-06-22T19:25:32.165-05:00  INFO 80991 --- [eureka-server] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8761
+2026-06-22T19:25:32.184-05:00  INFO 80991 --- [eureka-server] [           main] c.cronos.eureka.EurekaServerApplication  : Started EurekaServerApplication in 2.788 seconds (process running for 3.165)
+2026-06-22T19:25:46.884-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-22T19:25:46.885-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-22T19:25:46.887-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-06-22T19:26:26.461-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-7] c.n.e.registry.AbstractInstanceRegistry  : Registered instance NOTIFICATION-SERVICE/192.168.18.43:notification-service:8088 with status UP (replication=false)
+2026-06-22T19:26:26.464-05:00  INFO 80991 --- [eureka-server] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/192.168.18.43:auth-service:8081 with status UP (replication=false)
+2026-06-22T19:26:26.468-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status UP (replication=false)
+2026-06-22T19:26:27.432-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-2] c.n.e.registry.AbstractInstanceRegistry  : Registered instance GATEWAY-SERVICE/192.168.18.43:gateway-service:8080 with status UP (replication=false)
+2026-06-22T19:26:27.458-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance NOTIFICATION-SERVICE/192.168.18.43:notification-service:8088 with status UP (replication=true)
+2026-06-22T19:26:27.458-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status UP (replication=true)
+2026-06-22T19:26:27.458-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/192.168.18.43:auth-service:8081 with status UP (replication=true)
+2026-06-22T19:26:27.962-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-4] c.n.e.registry.AbstractInstanceRegistry  : Registered instance GATEWAY-SERVICE/192.168.18.43:gateway-service:8080 with status UP (replication=true)
+2026-06-22T19:26:28.270-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance MENU-SERVICE/192.168.18.43:menu-service:8082 with status UP (replication=false)
+2026-06-22T19:26:28.809-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance MENU-SERVICE/192.168.18.43:menu-service:8082 with status UP (replication=true)
+2026-06-22T19:26:30.584-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-7] c.n.e.registry.AbstractInstanceRegistry  : Registered instance INVENTORY-SERVICE/192.168.18.43:inventory-service:8085 with status UP (replication=false)
+2026-06-22T19:26:30.910-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-1] c.n.e.registry.AbstractInstanceRegistry  : Registered instance BILLING-SERVICE/192.168.18.43:billing-service:8084 with status UP (replication=false)
+2026-06-22T19:26:31.129-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance INVENTORY-SERVICE/192.168.18.43:inventory-service:8085 with status UP (replication=true)
+2026-06-22T19:26:31.131-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance BILLING-SERVICE/192.168.18.43:billing-service:8084 with status UP (replication=true)
+2026-06-22T19:26:31.157-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance ORDER-SERVICE/192.168.18.43:order-service:8083 with status UP (replication=false)
+2026-06-22T19:26:31.222-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance RESERVATION-SERVICE/192.168.18.43:reservation-service:8086 with status UP (replication=false)
+2026-06-22T19:26:31.676-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance ORDER-SERVICE/192.168.18.43:order-service:8083 with status UP (replication=true)
+2026-06-22T19:26:31.678-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance RESERVATION-SERVICE/192.168.18.43:reservation-service:8086 with status UP (replication=true)
+2026-06-22T19:26:32.152-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-06-22T19:27:32.157-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:28:32.161-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-06-22T19:29:32.165-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:30:32.167-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-06-22T19:31:32.168-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-06-22T19:32:32.173-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:33:32.174-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-06-22T19:34:32.176-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-06-22T19:35:32.177-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-06-22T19:36:32.181-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-06-22T19:37:32.182-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-06-22T19:38:32.185-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 33ms
+2026-06-22T19:39:30.664-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status DOWN (replication=false)
+2026-06-22T19:39:31.210-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status DOWN (replication=true)
+2026-06-22T19:39:32.189-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-06-22T19:39:43.144-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status UP (replication=false)
+2026-06-22T19:39:43.705-05:00  INFO 80991 --- [eureka-server] [nio-8761-exec-1] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CONSULTA-SERVICE/192.168.18.43:consulta-service:8087 with status UP (replication=true)
+2026-06-22T19:40:32.105-05:00  INFO 80991 --- [eureka-server] [hresholdUpdater] c.n.e.r.PeerAwareInstanceRegistryImpl    : Current renewal threshold is : 17
+2026-06-22T19:40:32.193-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:41:32.198-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:42:32.201-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-06-22T19:43:32.205-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-06-22T19:44:32.210-05:00  INFO 80991 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms

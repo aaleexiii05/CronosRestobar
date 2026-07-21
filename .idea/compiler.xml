@@ -22,7 +22,13 @@
         </processorPath>
         <module name="cronos-backend" />
       </profile>
-      <profile name="Annotation profile for Cronos Restobar - Notification Service" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eureka-server" />
+      </profile>
+      <profile name="Annotation profile for Cronos Restobar - Reservation Service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -30,8 +36,9 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="auth-service" />
-        <module name="consulta-service" />
         <module name="inventory-service" />
+        <module name="consulta-service" />
+        <module name="gateway-service" />
         <module name="reservation-service" />
         <module name="order-service" />
         <module name="menu-service" />
@@ -47,6 +54,8 @@
       <module name="consulta-service" options="-parameters" />
       <module name="cronos-backend" options="-parameters" />
       <module name="demo" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
       <module name="menu-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />

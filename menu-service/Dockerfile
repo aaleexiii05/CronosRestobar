@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY menu-service/pom.xml .
+COPY menu-service/src ./src
 RUN apt-get update && apt-get install -y maven && \
     mvn clean package -DskipTests
 
