@@ -1,25 +1,35 @@
 services:
   - type: web
+    name: cronos-mysql
+    runtime: docker
+    dockerfilePath: mysql/Dockerfile
+    rootDir: mysql
+    plan: free
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        sync: false
+
+  - type: web
     name: eureka-server
     runtime: docker
-    dockerfilePath: eureka-server/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: eureka-server
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: SERVER_PORT
         value: "8761"
 
   - type: web
     name: gateway-service
     runtime: docker
-    dockerfilePath: gateway-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: gateway-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: JWT_SECRET
         sync: false
       - key: EUREKA_URL
@@ -34,20 +44,26 @@ services:
   - type: web
     name: auth-service
     runtime: docker
-    dockerfilePath: auth-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: auth-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: JWT_SECRET
         sync: false
       - key: EUREKA_URL
@@ -62,20 +78,26 @@ services:
   - type: web
     name: order-service
     runtime: docker
-    dockerfilePath: order-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: order-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -86,20 +108,26 @@ services:
   - type: web
     name: billing-service
     runtime: docker
-    dockerfilePath: billing-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: billing-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -118,20 +146,26 @@ services:
   - type: web
     name: menu-service
     runtime: docker
-    dockerfilePath: menu-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: menu-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -142,20 +176,26 @@ services:
   - type: web
     name: inventory-service
     runtime: docker
-    dockerfilePath: inventory-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: inventory-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -166,20 +206,26 @@ services:
   - type: web
     name: reservation-service
     runtime: docker
-    dockerfilePath: reservation-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: reservation-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: MYSQL_HOST
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: host
       - key: MYSQL_PORT
         value: "3306"
       - key: MYSQL_USERNAME
-        sync: false
+        value: root
       - key: MYSQL_PASSWORD
-        sync: false
+        fromService:
+          name: cronos-mysql
+          type: web
+          property: env MYSQL_ROOT_PASSWORD
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -190,12 +236,12 @@ services:
   - type: web
     name: notification-service
     runtime: docker
-    dockerfilePath: notification-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: notification-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -206,12 +252,12 @@ services:
   - type: web
     name: consulta-service
     runtime: docker
-    dockerfilePath: consulta-service/Dockerfile
+    dockerfilePath: Dockerfile
+    rootDir: consulta-service
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: -Xms256m -Xmx512m
+        value: -Xms256m -Xmx400m
       - key: EUREKA_URL
         fromService:
           name: eureka-server
