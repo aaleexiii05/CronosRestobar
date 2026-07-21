@@ -1,0 +1,149 @@
+services:
+  mysql:
+    image: mysql:8.3
+    container_name: cronos-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-254123}
+      MYSQL_DATABASE: cronos_db
+      TZ: America/Lima
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: cronos-eureka
+    restart: always
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_URL=http://localhost:8761/eureka/
+
+  gateway-service:
+    build: ./gateway-service
+    container_name: cronos-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET:-cronosRestobarSecretKey2024JWTTokenSeguroParaElProyecto}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:4200}
+
+  auth-service:
+    build: ./auth-service
+    container_name: cronos-auth
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET:-cronosRestobarSecretKey2024JWTTokenSeguroParaElProyecto}
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+
+  order-service:
+    build: ./order-service
+    container_name: cronos-order
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+
+  billing-service:
+    build: ./billing-service
+    container_name: cronos-billing
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
+      - MP_BACK_URL_SUCCESS=${MP_BACK_URL_SUCCESS:-http://localhost:4200/cliente}
+      - MP_BACK_URL_FAILURE=${MP_BACK_URL_FAILURE:-http://localhost:4200/checkout}
+      - MP_WEBHOOK_URL=${MP_WEBHOOK_URL:-http://localhost:8080/api/facturas/webhook}
+
+  menu-service:
+    build: ./menu-service
+    container_name: cronos-menu
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: cronos-inventory
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+
+  reservation-service:
+    build: ./reservation-service
+    container_name: cronos-reservation
+    restart: always
+    depends_on:
+      - eureka-server
+      - mysql
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-254123}
+
+  notification-service:
+    build: ./notification-service
+    container_name: cronos-notification
+    restart: always
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+
+  consulta-service:
+    build: ./consulta-service
+    container_name: cronos-consulta
+    restart: always
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - APIPERU_TOKEN=${APIPERU_TOKEN:-39d6e476c19a3b8a566bc88591ecbcc3f6cda5c763d4216ef0ef8d1031a1f787}
+
+  frontend:
+    build: ./frontend
+    container_name: cronos-frontend
+    restart: always
+    ports:
+      - "4200:80"
+    depends_on:
+      - gateway-service
+
+volumes:
+  mysql_data:

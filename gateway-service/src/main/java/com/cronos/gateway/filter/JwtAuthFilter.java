@@ -26,7 +26,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
 
     private final SecretKey secretKey;
 
-    public JwtAuthFilter(@Value("${jwt.secret:cronos-restobar-secret-key-2024-must-be-at-least-256-bits}") String secret) {
+    public JwtAuthFilter(@Value("${jwt.secret}") String secret) {
         super(Config.class);
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         if (keyBytes.length < 32) {

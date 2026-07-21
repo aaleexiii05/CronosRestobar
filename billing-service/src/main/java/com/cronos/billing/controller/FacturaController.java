@@ -1,5 +1,6 @@
 package com.cronos.billing.controller;
 
+import com.cronos.billing.dto.AnularFacturaRequest;
 import com.cronos.billing.dto.FacturaDTO;
 import com.cronos.billing.service.FacturaService;
 import jakarta.validation.Valid;
@@ -35,5 +36,11 @@ public class FacturaController {
     @PostMapping
     public ResponseEntity<FacturaDTO> emitir(@Valid @RequestBody FacturaDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(facturaService.emitir(dto));
+    }
+
+    @PostMapping("/{id}/anular")
+    public ResponseEntity<FacturaDTO> anular(@PathVariable Long id, @RequestBody(required = false) AnularFacturaRequest request) {
+        String motivo = (request != null) ? request.getMotivo() : null;
+        return ResponseEntity.ok(facturaService.anular(id, motivo));
     }
 }

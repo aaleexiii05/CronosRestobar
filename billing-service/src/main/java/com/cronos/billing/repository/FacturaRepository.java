@@ -20,4 +20,6 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
     List<Factura> findByFechaEmisionBetween(LocalDateTime inicio, LocalDateTime fin);
 
     boolean existsByNumeroComprobante(String numeroComprobante);
+
+    Optional<Factura> findByMercadopagoPreferenceId(String mercadopagoPreferenceId);
 }

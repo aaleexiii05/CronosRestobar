@@ -91,9 +91,6 @@ public class ReservaService {
             if (dto.getMetodoPago() == null || "EFECTIVO".equals(dto.getMetodoPago())) {
                 throw new IllegalArgumentException("Para reservas de 3 a más personas, el pago debe ser en línea.");
             }
-            if (dto.getTransaccionId() == null || dto.getTransaccionId().trim().isEmpty()) {
-                throw new IllegalArgumentException("El ID de transacción de pago es obligatorio para reservas de 3 a más personas.");
-            }
         }
 
         Long pedidoId = null;
@@ -118,8 +115,7 @@ public class ReservaService {
                 pedidoId = ((Number) pedidoResp.get("id")).longValue();
             }
 
-            if (dto.getMetodoPago() != null && !"EFECTIVO".equals(dto.getMetodoPago())
-                    && dto.getTransaccionId() != null && !dto.getTransaccionId().trim().isEmpty()) {
+            if (dto.getMetodoPago() != null && !"EFECTIVO".equals(dto.getMetodoPago())) {
                 pagoEnLineaRealizado = true;
             }
         }
@@ -132,7 +128,8 @@ public class ReservaService {
                     .clienteNombre(dto.getClienteNombre())
                     .clienteRuc(dto.getClienteRuc())
                     .metodoPago(dto.getMetodoPago())
-                    .transaccionId(dto.getTransaccionId())
+                    .transaccionId(dto.getTransaccionId() != null && !dto.getTransaccionId().trim().isEmpty()
+                            ? dto.getTransaccionId() : null)
                     .build();
             try {
                 billingClient.emitirFactura(facturaReq);
