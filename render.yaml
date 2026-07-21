@@ -60,10 +60,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: JWT_SECRET
         sync: false
       - key: EUREKA_URL
@@ -94,10 +91,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -124,10 +118,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -162,10 +153,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -192,10 +180,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: EUREKA_URL
         fromService:
           name: eureka-server
@@ -222,10 +207,7 @@ services:
       - key: MYSQL_USERNAME
         value: root
       - key: MYSQL_PASSWORD
-        fromService:
-          name: cronos-mysql
-          type: web
-          property: env MYSQL_ROOT_PASSWORD
+        value: cronos2024
       - key: EUREKA_URL
         fromService:
           name: eureka-server
