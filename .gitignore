@@ -1,0 +1,22 @@
+# Environment files (secrets)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+target/
+
+# Node
+node_modules/
+
+# Docker volumes
+mysql_data/

@@ -51,6 +51,8 @@ public class FacturaService {
         return toDTO(factura);
     }
 
+    private final MercadoPagoService mercadoPagoService;
+
     @Transactional
     public FacturaDTO emitir(FacturaDTO dto) {
         PedidoDTO pedido = orderClient.obtenerPedido(dto.getPedidoId());
@@ -96,11 +98,10 @@ public class FacturaService {
             }
             montoRecibido = dto.getMontoRecibido();
             vuelto = montoRecibido.subtract(total);
-        } else if (dto.getMetodoPago() == Factura.MetodoPago.MERCADO_PAGO) {
-            if (dto.getTransaccionId() == null || dto.getTransaccionId().trim().isEmpty()) {
-                throw new IllegalArgumentException("El ID de transacción de Mercado Pago es obligatorio.");
-            }
         }
+
+        boolean esMpSinTransaccion = dto.getMetodoPago() == Factura.MetodoPago.MERCADO_PAGO
+                && (dto.getTransaccionId() == null || dto.getTransaccionId().trim().isEmpty());
 
         Factura factura = Factura.builder()
                 .pedidoId(pedido.getId())
@@ -116,12 +117,12 @@ public class FacturaService {
                 .igv(igv)
                 .total(total)
                 .metodoPago(dto.getMetodoPago())
-                .transaccionId(dto.getTransaccionId())
+                .transaccionId(esMpSinTransaccion ? null : dto.getTransaccionId())
                 .montoRecibido(montoRecibido)
                 .vuelto(vuelto)
                 .montoPagado(montoPagado)
-                .estadoPago(Factura.EstadoPago.APROBADO)
-                .fechaPago(LocalDateTime.now())
+                .estadoPago(esMpSinTransaccion ? Factura.EstadoPago.PENDIENTE : Factura.EstadoPago.APROBADO)
+                .fechaPago(esMpSinTransaccion ? null : LocalDateTime.now())
                 .build();
 
         if (pedido.getDetalles() != null) {
@@ -137,6 +138,29 @@ public class FacturaService {
         }
 
         orderClient.actualizarEstado(pedido.getId(), "ENTREGADO");
+
+        return toDTO(facturaRepository.save(factura));
+    }
+
+    @Transactional
+    public FacturaDTO anular(Long id, String motivo) {
+        Factura factura = facturaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con id: " + id));
+
+        if (factura.getEstadoPago() == Factura.EstadoPago.ANULADO) {
+            throw new IllegalArgumentException("La factura ya se encuentra anulada");
+        }
+
+        if (factura.getEstadoPago() != Factura.EstadoPago.APROBADO) {
+            throw new IllegalArgumentException("Solo se pueden anular facturas en estado APROBADO");
+        }
+
+        if (factura.getMetodoPago() == Factura.MetodoPago.MERCADO_PAGO) {
+            mercadoPagoService.reembolsarPago(factura);
+        }
+
+        factura.setEstadoPago(Factura.EstadoPago.ANULADO);
+        factura.setFechaAnulacion(LocalDateTime.now());
 
         return toDTO(facturaRepository.save(factura));
     }
@@ -164,7 +188,9 @@ public class FacturaService {
                 .total(factura.getTotal())
                 .metodoPago(factura.getMetodoPago())
                 .transaccionId(factura.getTransaccionId())
+                .mercadopagoPreferenceId(factura.getMercadopagoPreferenceId())
                 .fechaPago(factura.getFechaPago())
+                .fechaAnulacion(factura.getFechaAnulacion())
                 .estadoPago(factura.getEstadoPago())
                 .montoPagado(factura.getMontoPagado())
                 .montoRecibido(factura.getMontoRecibido())

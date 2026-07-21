@@ -153,10 +153,22 @@ import { ConsultaService } from '../../services/consulta.service';
 
             <!-- Lógica Mercado Pago -->
             <div *ngIf="metodoPago === 'MERCADO_PAGO'">
-              <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 12px;">
-                <mat-label>ID de Transacción</mat-label>
-                <input matInput type="text" [(ngModel)]="transaccionId" name="transaccionId" required>
-              </mat-form-field>
+              <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+                <mat-form-field appearance="fill" style="flex: 1; margin-bottom: 0;">
+                  <mat-label>ID de Transacción (opcional)</mat-label>
+                  <input matInput type="text" [(ngModel)]="transaccionId" name="transaccionId" placeholder="O dejar vacío para generar link">
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="button" style="height: 56px; white-space: nowrap;" (click)="generarLinkMP()">
+                  Generar Link MP
+                </button>
+              </div>
+              <div *ngIf="mpLink" style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 12px; word-break: break-all;">
+                <div style="font-size: 0.8rem; color: #1565c0; margin-bottom: 4px;">Link de pago generado:</div>
+                <a [href]="mpLink" target="_blank" style="font-size: 0.85rem; color: #0d47a1;">{{ mpLink }}</a>
+                <button mat-icon-button style="margin-left: 8px;" (click)="copiarLink()" title="Copiar link">
+                  <span class="material-symbols-outlined" style="font-size: 1.1rem;">content_copy</span>
+                </button>
+              </div>
             </div>
 
             <!-- Botones -->
@@ -251,6 +263,8 @@ export class CajeroDashboardComponent implements OnInit {
 
   error = '';
   comprobanteEmitido: any = null;
+  mpLink = '';
+  procesandoMP = false;
 
   constructor(
     private authService: AuthService,
@@ -315,6 +329,35 @@ export class CajeroDashboardComponent implements OnInit {
     this.pedidoSeleccionado = null;
   }
 
+  generarLinkMP(): void {
+    if (!this.pedidoSeleccionado) return;
+    this.procesandoMP = true;
+    this.error = '';
+    this.mpLink = '';
+    this.facturaService.crearPreferencia(this.pedidoSeleccionado.id).subscribe({
+      next: (res: any) => {
+        this.mpLink = res.initPoint;
+        this.procesandoMP = false;
+        // Auto-set transaccionId to preference ID for tracking
+        this.transaccionId = res.preferenceId;
+      },
+      error: (err) => {
+        this.error = err.error?.mensaje || 'Error al generar link de pago.';
+        this.procesandoMP = false;
+      }
+    });
+  }
+
+  copiarLink(): void {
+    if (this.mpLink) {
+      navigator.clipboard.writeText(this.mpLink).then(() => {
+        this.error = '';
+      }).catch(() => {
+        this.error = 'No se pudo copiar el link.';
+      });
+    }
+  }
+
   procesarPago(): void {
     this.error = '';
 
@@ -347,6 +390,7 @@ export class CajeroDashboardComponent implements OnInit {
       next: (res) => {
         this.comprobanteEmitido = res;
         this.pedidoSeleccionado = null;
+        this.mpLink = '';
         this.cargarPedidosPendientes();
       },
       error: (err) => {

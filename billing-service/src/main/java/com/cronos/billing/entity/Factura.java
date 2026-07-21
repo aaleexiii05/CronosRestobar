@@ -65,8 +65,14 @@ public class Factura {
     @Column(name = "transaccion_id", length = 100)
     private String transaccionId;
 
+    @Column(name = "mercadopago_preference_id", length = 100)
+    private String mercadopagoPreferenceId;
+
     @Column(name = "fecha_pago")
     private LocalDateTime fechaPago;
+
+    @Column(name = "fecha_anulacion")
+    private LocalDateTime fechaAnulacion;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_pago", nullable = false, length = 20)

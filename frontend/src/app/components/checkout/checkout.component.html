@@ -172,9 +172,14 @@
             </select>
           </div>
 
-          <div *ngIf="metodoPago === 'MERCADO_PAGO'" style="margin-bottom: 15px;">
-            <label>ID Transacción Mercado Pago</label>
-            <input type="text" [(ngModel)]="transaccionId" placeholder="Ingresar código de transacción Mercado Pago">
+          <div *ngIf="metodoPago === 'MERCADO_PAGO'" style="margin-bottom: 15px; background-color: rgba(0, 158, 227, 0.08); border: 1px solid rgba(0, 158, 227, 0.3); padding: 12px; border-radius: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.3rem;">💳</span>
+              <div>
+                <div style="font-weight: bold; color: #009ee3; font-size: 0.9rem;">Pago con Mercado Pago</div>
+                <div style="font-size: 0.78rem; color: var(--txt-sub);">Serás redirigido a Mercado Pago para completar el pago de forma segura.</div>
+              </div>
+            </div>
           </div>
 
           <div style="margin-bottom: 15px;">

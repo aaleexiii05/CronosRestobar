@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
 import { ReservaService } from '../../services/reserva.service';
 import { ConsultaService } from '../../services/consulta.service';
+import { FacturaService } from '../../services/factura.service';
 
 @Component({
   selector: 'app-checkout',
@@ -54,6 +55,7 @@ export class CheckoutComponent implements OnInit {
     private authService: AuthService,
     private reservaService: ReservaService,
     private consultaService: ConsultaService,
+    private facturaService: FacturaService,
     private router: Router
   ) {}
 
@@ -193,8 +195,9 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    if (this.metodoPago === 'MERCADO_PAGO' && !this.transaccionId) {
-      this.resError = 'Ingrese el ID de transacción de Mercado Pago para procesar el abono.';
+    if (this.metodoPago === 'MERCADO_PAGO' && this.transaccionId && this.personasBusqueda >= 3) {
+      // Manual transaccionId is only allowed for small groups; for 3+ use Checkout Pro
+      this.resError = 'Para reservas de 3 o más personas, use el pago con Mercado Pago online.';
       return;
     }
 
@@ -235,7 +238,24 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.reservaService.crear(reservaDto).subscribe({
-      next: (res) => {
+      next: (res: any) => {
+        // Si es Mercado Pago sin transaccionId manual, redirigir a Checkout Pro
+        if (this.metodoPago === 'MERCADO_PAGO' && res.pedidoId) {
+          this.facturaService.crearPreferencia(res.pedidoId).subscribe({
+            next: (mpRes: any) => {
+              if (mpRes.initPoint) {
+                window.location.href = mpRes.initPoint;
+              } else {
+                this.resError = 'Error al obtener el enlace de pago de Mercado Pago.';
+              }
+            },
+            error: (mpErr) => {
+              this.resError = mpErr.error?.mensaje || 'Error al crear la preferencia de pago.';
+            }
+          });
+          return;
+        }
+
         this.resSuccess = 'Reserva registrada con éxito.';
         
         // Armar el ticket emitido para mostrar en PDF simulado
@@ -247,7 +267,7 @@ export class CheckoutComponent implements OnInit {
           razonSocial: this.razonSocial,
           clienteDocumento: this.usuarioActual.dni,
           metodoPago: this.metodoPago,
-          transaccionId: this.transaccionId,
+          transaccionId: this.transaccionId || (res as any)?.pedidoId?.toString(),
           total: this.totalCart,
           subtotal: this.totalCart / 1.18,
           igv: this.totalCart - (this.totalCart / 1.18),

@@ -48,7 +48,11 @@ public class FacturaDTO {
 
     private String transaccionId;
 
+    private String mercadopagoPreferenceId;
+
     private LocalDateTime fechaPago;
+
+    private LocalDateTime fechaAnulacion;
 
     private Factura.EstadoPago estadoPago;
 

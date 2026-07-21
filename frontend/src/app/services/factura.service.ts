@@ -25,4 +25,12 @@ export class FacturaService {
   emitir(facturaDto: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, facturaDto);
   }
+
+  crearPreferencia(pedidoId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/crear-preferencia`, { pedidoId });
+  }
+
+  anular(id: number, motivo?: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${id}/anular`, { motivo });
+  }
 }

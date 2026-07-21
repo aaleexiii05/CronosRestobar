@@ -28,6 +28,10 @@ public class GatewayConfig {
                         .path("/api/pedidos/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))
                         .uri("lb://order-service"))
+                .route("billing-webhook", r -> r
+                        .path("/api/facturas/webhook")
+                        .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(false))))
+                        .uri("lb://billing-service"))
                 .route("billing-service", r -> r
                         .path("/api/facturas/**")
                         .filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthFilter.Config(true))))

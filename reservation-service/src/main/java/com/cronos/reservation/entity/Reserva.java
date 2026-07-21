@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "reservas", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"mesa_id", "fecha", "turno"})
-})
+@Table(name = "reservas")
 @Getter
 @Setter
 @NoArgsConstructor
